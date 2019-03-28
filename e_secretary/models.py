@@ -3,7 +3,7 @@ from django.urls import reverse
 from datetime import datetime
 
 # Create your models here.
-
+#YOLO
 
 class Course(models.Model):
     """A typical class defining a model, derived from the Model class."""
