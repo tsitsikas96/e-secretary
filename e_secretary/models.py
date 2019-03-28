@@ -101,7 +101,7 @@ class Grammateia(models.Model):
     lname = models.CharField(max_length=50, help_text='Last Name')
 
 
-class Drastiriotitita(models.Model):
+class Drastiriotita(models.Model):
 
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
@@ -109,16 +109,6 @@ class Drastiriotitita(models.Model):
     sintelestis = models.FloatField()
     date = models.DateTimeField()
     tipos = models.CharField()
-
-
-class SimmetoxiDrastiriotita(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    student = models.ForeignKey(
-        'Student', on_delete=models.SET_NULL, null=True)
-    drastiriotita = models.ForeignKey(
-        Drastiriotitita, on_delete=models.SET_NULL, null=True)
-    grade = models.FloatField()
 
 
 class Professor(models.Model):
@@ -232,3 +222,13 @@ class Thesis(models.Model):
 
     def get_absolute_url(self):
         return reverse('model-detail-view', args=[str(self.thesis_id)])
+
+
+class SimmetoxiDrastiriotita(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(
+        Student, on_delete=models.SET_NULL, null=True)
+    drastiriotita = models.ForeignKey(
+        Drastiriotita, on_delete=models.SET_NULL, null=True)
+    grade = models.FloatField()
