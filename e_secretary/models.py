@@ -3,7 +3,8 @@ from django.urls import reverse
 from datetime import datetime
 
 # Create your models here.
-#YOLO
+# YOLO
+
 
 class Course(models.Model):
     """A typical class defining a model, derived from the Model class."""
@@ -28,7 +29,7 @@ class Course(models.Model):
 
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
-        return self.name
+        return f'{self.name}'
 
 
 class Didaskalia(models.Model):
@@ -52,6 +53,10 @@ class Didaskalia(models.Model):
     # Metadata
     class Meta:
         ordering = ['adak_etos']
+
+    def __str__(self):
+        """String for representing the MyModelName object (in Admin site etc.)."""
+        return f'{self.course_id}'
 
     # Methods
     def get_absolute_url(self):
@@ -100,6 +105,9 @@ class Grammateia(models.Model):
     fname = models.CharField(max_length=50, help_text='First Name')
     lname = models.CharField(max_length=50, help_text='Last Name')
 
+    def __str__(self):
+        return f'{self.fname} {self.lname}'
+
 
 class Drastiriotita(models.Model):
 
@@ -109,6 +117,9 @@ class Drastiriotita(models.Model):
     sintelestis = models.FloatField()
     date = models.DateTimeField()
     tipos = models.CharField()
+
+    def __str__(self):
+        return f'{self.didaskalia_id}: {self.tipos}'
 
 
 class Professor(models.Model):
@@ -129,7 +140,7 @@ class Professor(models.Model):
 
     id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=20)
-    sname = models.CharField(max_length=20)
+    lname = models.CharField(max_length=20)
     title = models.CharField(
         max_length=5, choices=PROFESSOR_TITLE, default=PROFESSOR)
     mail = models.EmailField()
@@ -138,10 +149,10 @@ class Professor(models.Model):
 
     # Metadata
     class Meta:
-        ordering = ['-surname']
+        ordering = ['surname']
 
     def __str__(self):
-        return self.id
+        return f'{self.fname} {self.lname}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -153,13 +164,13 @@ class Student(models.Model):
 
     am = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=20)
-    sname = models.CharField(max_length=20)
+    lname = models.CharField(max_length=20)
     fathername = models.CharField(max_length=20)
     age = models.IntegerField(max_length=2)
     date_eisagwghs = models.DateField(auto_now_add=True)
     department = models.CharField(max_length=100)
     programma_spoudwn = models.CharField(max_length=10)
-    tomeas = models.CharField(max_length=100, null=True)
+    tomeas = models.CharField(max_length=100, null=True, blank=True)
     didaskalia = models.ManyToManyField(Didaskalia, through="Dilosi")
     drastiriotita = models.ManyToManyField(
         Drastiriotita, through="SimmetoxiDrastiriotita")
@@ -168,7 +179,7 @@ class Student(models.Model):
         ordering = ['-am']
 
     def __str__(self):
-        return self.am
+        return f'{self.fname} {self.lname} {self.am}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -195,7 +206,7 @@ class Certificate(models.Model):
         ordering = ['-cert_id']
 
     def __str__(self):
-        return self.cert_id
+        return f'{self.cert_id}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -207,7 +218,7 @@ class Thesis(models.Model):
 
     thesis_id = models.AutoField(primary_key=True)
     subject = models.TextField()
-    vathmos = models.FloatField(max_length=5)
+    grade = models.FloatField(null=True, blank=True)
     date_anathesis = models.DateField(auto_now_add=True)
     date_paradosis = models.DateField(null=True)
     student_am = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -216,7 +227,7 @@ class Thesis(models.Model):
         ordering = ['-thesis_id']
 
     def __str__(self):
-        return self.thesis_id
+        return f'{self.thesis_id}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -231,4 +242,7 @@ class SimmetoxiDrastiriotita(models.Model):
         Student, on_delete=models.SET_NULL, null=True)
     drastiriotita = models.ForeignKey(
         Drastiriotita, on_delete=models.SET_NULL, null=True)
-    grade = models.FloatField()
+    grade = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.student}: {self.drastiriotita}'
