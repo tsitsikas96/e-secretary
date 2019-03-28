@@ -42,17 +42,17 @@ class Didaskalia(models.Model):
         (XEIMERINO, 'XEIMERINO')
     )
     SEMESTER_CHOICES = ((y, y)
-                        for y in range(1968, datetime.date.today().year+1))
+                        for y in range(1968, datetime.now().year+1))
     # Fields
     id = models.AutoField(primary_key=True)
     course_id = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
     akad_etos = models.IntegerField(choices=YEAR_CHOICES,
-                                    default=datetime.datetime.now().year,)
-    eksamino = models.CharField(choices=SEMESTER_CHOICES)
+                                    default=datetime.now().year)
+    eksamino = models.CharField(max_length=9, choices=SEMESTER_CHOICES)
 
     # Metadata
     class Meta:
-        ordering = ['adak_etos']
+        ordering = ['akad_etos']
 
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
@@ -87,7 +87,7 @@ class Orologio(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
-    day = models.CharField(choices=DAYS_CHOICES)
+    day = models.CharField(max_length=3, choices=DAYS_CHOICES)
     time = models.TimeField()
 
 
@@ -104,6 +104,7 @@ class Grammateia(models.Model):
     id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, help_text='First Name')
     lname = models.CharField(max_length=50, help_text='Last Name')
+    email = models.EmailField()
 
     def __str__(self):
         return f'{self.fname} {self.lname}'
@@ -116,7 +117,7 @@ class Drastiriotita(models.Model):
         Didaskalia, on_delete=models.SET_NULL, null=True)
     sintelestis = models.FloatField()
     date = models.DateTimeField()
-    tipos = models.CharField()
+    tipos = models.CharField(max_length=45)
 
     def __str__(self):
         return f'{self.didaskalia_id}: {self.tipos}'
@@ -143,13 +144,13 @@ class Professor(models.Model):
     lname = models.CharField(max_length=20)
     title = models.CharField(
         max_length=5, choices=PROFESSOR_TITLE, default=PROFESSOR)
-    mail = models.EmailField()
+    email = models.EmailField()
     tomeas = models.CharField(max_length=100)
     didaskalia = models.ManyToManyField(Didaskalia)
 
     # Metadata
     class Meta:
-        ordering = ['surname']
+        ordering = ['lname']
 
     def __str__(self):
         return f'{self.fname} {self.lname}'
@@ -166,7 +167,7 @@ class Student(models.Model):
     fname = models.CharField(max_length=20)
     lname = models.CharField(max_length=20)
     fathername = models.CharField(max_length=20)
-    age = models.IntegerField(max_length=2)
+    age = models.IntegerField()
     date_eisagwghs = models.DateField(auto_now_add=True)
     department = models.CharField(max_length=100)
     programma_spoudwn = models.CharField(max_length=10)
@@ -174,6 +175,7 @@ class Student(models.Model):
     didaskalia = models.ManyToManyField(Didaskalia, through="Dilosi")
     drastiriotita = models.ManyToManyField(
         Drastiriotita, through="SimmetoxiDrastiriotita")
+    email = models.EmailField()
 
     class Meta:
         ordering = ['-am']
@@ -187,7 +189,7 @@ class Student(models.Model):
         return reverse('model-detail-view', args=[str(self.am)])
 
 
-class Dhlwsh(models.Model):
+class Dilosi(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     didaskalies = models.ForeignKey(Didaskalia, on_delete=models.CASCADE)
     telikos_vathmos = models.FloatField(max_length=5)
