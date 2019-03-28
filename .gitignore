@@ -1,0 +1,6 @@
+web_project
+node_modules
+package-lock.json
+package.json
+.eslintrc.json
+.prettierrc
