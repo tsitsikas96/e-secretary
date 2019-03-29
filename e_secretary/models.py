@@ -3,11 +3,11 @@ from django.urls import reverse
 from datetime import datetime
 
 # Create your models here.
-#YOLO
+# YOLO
+
 
 class Course(models.Model):
     """A typical class defining a model, derived from the Model class."""
-
     # Fields
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, help_text='Course Name')
@@ -28,11 +28,10 @@ class Course(models.Model):
 
     def __str__(self):
         """String for representing the MyModelName object (in Admin site etc.)."""
-        return self.name
+        return f'{self.name}'
 
 
 class Didaskalia(models.Model):
-
     EARINO = 'EARINO'
     XEIMERINO = 'XEIMERINO'
 
@@ -41,17 +40,21 @@ class Didaskalia(models.Model):
         (XEIMERINO, 'XEIMERINO')
     )
     SEMESTER_CHOICES = ((y, y)
-                        for y in range(1968, datetime.date.today().year+1))
+                        for y in range(1968, datetime.now().year+1))
     # Fields
     id = models.AutoField(primary_key=True)
     course_id = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
-    akad_etos = models.IntegerField(choices=YEAR_CHOICES,
-                                    default=datetime.datetime.now().year,)
-    eksamino = models.CharField(choices=SEMESTER_CHOICES)
+    akad_etos = models.IntegerField(choices=SEMESTER_CHOICES,
+                                    default=datetime.now().year)
+    eksamino = models.CharField(max_length=9, choices=YEAR_CHOICES)
 
     # Metadata
     class Meta:
-        ordering = ['adak_etos']
+        ordering = ['akad_etos']
+
+    def __str__(self):
+        """String for representing the MyModelName object (in Admin site etc.)."""
+        return f'{self.course_id}'
 
     # Methods
     def get_absolute_url(self):
@@ -60,7 +63,6 @@ class Didaskalia(models.Model):
 
 
 class Orologio(models.Model):
-
     MON = 'MON'
     TUE = 'TUE'
     WEN = 'WEN'
@@ -82,37 +84,67 @@ class Orologio(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
-    day = models.CharField(choices=DAYS_CHOICES)
+    day = models.CharField(max_length=3, choices=DAYS_CHOICES)
     time = models.TimeField()
 
 
-class Announcement(models.Model):
+class Event(models.Model):
+    id = models.AutoField(primary_key=True)
+    content = models.TextField()
+    date = models.DateTimeField(default=datetime.now)
+    location = models.CharField(max_length=45, null=True, blank=True)
 
+    class Meta:
+        ordering = ['-date']
+
+
+class Announcement(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
     content = models.TextField(help_text='Announcement to make')
+    photo = models.ImageField(
+        upload_to='images/announcements', null=True, blank=True)
+    date = models.DateField(default=datetime.now)
+
+    class Meta:
+        ordering = ['-date']
+
+
+class Secr_Announcement(models.Model):
+    id = models.AutoField(primary_key=True)
+    content = models.TextField(help_text='Announcement to make')
+    photo = models.ImageField(
+        upload_to='images/secr_announcements', null=True, blank=True)
+    date = models.DateField(default=datetime.now)
+
+    class Meta:
+        ordering = ['-date']
 
 
 class Grammateia(models.Model):
-
     id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, help_text='First Name')
     lname = models.CharField(max_length=50, help_text='Last Name')
+    email = models.EmailField()
+
+    def __str__(self):
+        return f'{self.fname} {self.lname}'
 
 
 class Drastiriotita(models.Model):
-
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
     sintelestis = models.FloatField()
     date = models.DateTimeField()
-    tipos = models.CharField()
+    tipos = models.CharField(max_length=45)
+
+    def __str__(self):
+        return f'{self.didaskalia_id}: {self.tipos}'
 
 
 class Professor(models.Model):
-
     PROFESSOR = 'PROF'
     EPIKOUROS = 'EPIK'
     ANAPLHRWTHS = 'ANAPL'
@@ -129,19 +161,19 @@ class Professor(models.Model):
 
     id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=20)
-    sname = models.CharField(max_length=20)
+    lname = models.CharField(max_length=20)
     title = models.CharField(
         max_length=5, choices=PROFESSOR_TITLE, default=PROFESSOR)
-    mail = models.EmailField()
+    email = models.EmailField()
     tomeas = models.CharField(max_length=100)
     didaskalia = models.ManyToManyField(Didaskalia)
 
     # Metadata
     class Meta:
-        ordering = ['-surname']
+        ordering = ['lname']
 
     def __str__(self):
-        return self.id
+        return f'{self.fname} {self.lname}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -150,25 +182,25 @@ class Professor(models.Model):
 
 
 class Student(models.Model):
-
     am = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=20)
-    sname = models.CharField(max_length=20)
+    lname = models.CharField(max_length=20)
     fathername = models.CharField(max_length=20)
-    age = models.IntegerField(max_length=2)
+    age = models.IntegerField()
     date_eisagwghs = models.DateField(auto_now_add=True)
     department = models.CharField(max_length=100)
     programma_spoudwn = models.CharField(max_length=10)
-    tomeas = models.CharField(max_length=100, null=True)
+    tomeas = models.CharField(max_length=100, null=True, blank=True)
     didaskalia = models.ManyToManyField(Didaskalia, through="Dilosi")
     drastiriotita = models.ManyToManyField(
         Drastiriotita, through="SimmetoxiDrastiriotita")
+    email = models.EmailField()
 
     class Meta:
         ordering = ['-am']
 
     def __str__(self):
-        return self.am
+        return f'{self.fname} {self.lname} {self.am}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -176,14 +208,13 @@ class Student(models.Model):
         return reverse('model-detail-view', args=[str(self.am)])
 
 
-class Dhlwsh(models.Model):
+class Dilosi(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     didaskalies = models.ForeignKey(Didaskalia, on_delete=models.CASCADE)
     telikos_vathmos = models.FloatField(max_length=5)
 
 
 class Certificate(models.Model):
-
     cert_id = models.AutoField(primary_key=True)
     cert_type = models.CharField(max_length=50)
     date_requested = models.DateField(auto_now_add=True)
@@ -195,7 +226,7 @@ class Certificate(models.Model):
         ordering = ['-cert_id']
 
     def __str__(self):
-        return self.cert_id
+        return f'{self.cert_id}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -204,10 +235,9 @@ class Certificate(models.Model):
 
 
 class Thesis(models.Model):
-
     thesis_id = models.AutoField(primary_key=True)
     subject = models.TextField()
-    vathmos = models.FloatField(max_length=5)
+    grade = models.FloatField(null=True, blank=True)
     date_anathesis = models.DateField(auto_now_add=True)
     date_paradosis = models.DateField(null=True)
     student_am = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -216,7 +246,7 @@ class Thesis(models.Model):
         ordering = ['-thesis_id']
 
     def __str__(self):
-        return self.thesis_id
+        return f'{self.thesis_id}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -225,10 +255,12 @@ class Thesis(models.Model):
 
 
 class SimmetoxiDrastiriotita(models.Model):
-
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(
         Student, on_delete=models.SET_NULL, null=True)
     drastiriotita = models.ForeignKey(
         Drastiriotita, on_delete=models.SET_NULL, null=True)
-    grade = models.FloatField()
+    grade = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.student}: {self.drastiriotita}'

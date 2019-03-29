@@ -1,0 +1,14 @@
+html {
+    font-size: 16px;
+}
+
+.main-container {
+    background-color: white;
+}
+
+#tmima {
+    text-align: center;
+    padding: 10px;
+    box-shadow: 5px 10px 18px #888888;
+    margin-bottom: 2em;
+}

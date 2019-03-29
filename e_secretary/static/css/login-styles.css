@@ -1,0 +1,45 @@
+ /* Bordered form */
+ .login-form {
+     border: 0.3em solid #f1f1f1;
+     background-color: white;
+     width: 70%;
+     max-width: 700px;
+     margin: 10em auto;
+ }
+
+ /* Full-width inputs */
+ input[type=text],
+ input[type=password] {
+     width: 100%;
+     padding: 1em 1.5em;
+     margin: 0.5em 0em;
+     display: inline-block;
+     border: 1px solid #ccc;
+     box-sizing: border-box;
+ }
+
+ /* Center the avatar image inside this container */
+ .imgcontainer {
+     text-align: center;
+     margin: 1.7em 0 0.8em 0;
+ }
+
+ /* Avatar image */
+ img.avatar {
+     width: 20em;
+     height: auto;
+     border-radius: 50%;
+ }
+
+ /* Add padding to containers */
+ .form-container {
+     padding: 1em;
+ }
+
+ .modal-footer {
+     border-top: 0em;
+ }
+
+ .pass-recovery {
+     margin: auto;
+ }

@@ -1,0 +1,51 @@
+/* HEADER */
+.navbar {
+    background-color: #F5F5F5;
+}
+
+.upatras-logo {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+}
+
+span.menu {
+    float: right;
+    margin: 3em 5em 0em 0em;
+}
+
+.separator {
+    width: 100%;
+    border: 0.1em solid #CF9C63;
+    background-color: #CF9C63;
+    /* height: 0.1em; */
+    border-radius: 1em;
+}
+
+
+.navbar-nav {
+    margin: 0em 0.5em;
+    font-size: 1.2em;
+    float: right;
+}
+
+.navlink {
+    color: black;
+    text-decoration: none;
+}
+
+.nav-item a:link {
+    color: black;
+}
+
+.nav-item a:visited {
+    color: black;
+}
+
+.nav-item a:hover {
+    color: rgb(0, 0, 0, 0.8);
+}
+
+.nav-item a:active {
+    color: black;
+}
