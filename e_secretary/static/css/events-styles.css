@@ -1,0 +1,46 @@
+#events_container {
+    background-color: #F5F5F5;
+    padding: 0.5em;
+    border-radius: 5px;
+}
+
+#events_posts {
+    padding: 1em 0;
+}
+
+.events_page {
+    background-color: white;
+    font-size: 0.8em;
+    min-height: 12em;
+}
+
+.events_title {
+    font-weight: 200;
+}
+
+.events_ruler {
+    width: 80%;
+}
+
+.events_info {}
+
+.events_date {
+    color: red;
+    font-weight: 500;
+}
+
+.events_location {
+    font-weight: 300;
+}
+
+.events_date_ruler {
+    height: 6px;
+}
+
+.date-bg-secondary {
+    background-color: #9c9a9a;
+}
+
+.date-text-secondary {
+    color: #9c9a9a;
+}

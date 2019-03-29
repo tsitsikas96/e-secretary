@@ -8,7 +8,6 @@ from datetime import datetime
 
 class Course(models.Model):
     """A typical class defining a model, derived from the Model class."""
-
     # Fields
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, help_text='Course Name')
@@ -33,7 +32,6 @@ class Course(models.Model):
 
 
 class Didaskalia(models.Model):
-
     EARINO = 'EARINO'
     XEIMERINO = 'XEIMERINO'
 
@@ -65,7 +63,6 @@ class Didaskalia(models.Model):
 
 
 class Orologio(models.Model):
-
     MON = 'MON'
     TUE = 'TUE'
     WEN = 'WEN'
@@ -91,16 +88,41 @@ class Orologio(models.Model):
     time = models.TimeField()
 
 
-class Announcement(models.Model):
+class Event(models.Model):
+    id = models.AutoField(primary_key=True)
+    content = models.TextField()
+    date = models.DateTimeField(default=datetime.now)
+    location = models.CharField(max_length=45, null=True, blank=True)
 
+    class Meta:
+        ordering = ['-date']
+
+
+class Announcement(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
     content = models.TextField(help_text='Announcement to make')
+    photo = models.ImageField(
+        upload_to='images/announcements', null=True, blank=True)
+    date = models.DateField(default=datetime.now)
+
+    class Meta:
+        ordering = ['-date']
+
+
+class Secr_Announcement(models.Model):
+    id = models.AutoField(primary_key=True)
+    content = models.TextField(help_text='Announcement to make')
+    photo = models.ImageField(
+        upload_to='images/secr_announcements', null=True, blank=True)
+    date = models.DateField(default=datetime.now)
+
+    class Meta:
+        ordering = ['-date']
 
 
 class Grammateia(models.Model):
-
     id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, help_text='First Name')
     lname = models.CharField(max_length=50, help_text='Last Name')
@@ -111,7 +133,6 @@ class Grammateia(models.Model):
 
 
 class Drastiriotita(models.Model):
-
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
@@ -124,7 +145,6 @@ class Drastiriotita(models.Model):
 
 
 class Professor(models.Model):
-
     PROFESSOR = 'PROF'
     EPIKOUROS = 'EPIK'
     ANAPLHRWTHS = 'ANAPL'
@@ -162,7 +182,6 @@ class Professor(models.Model):
 
 
 class Student(models.Model):
-
     am = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=20)
     lname = models.CharField(max_length=20)
@@ -196,7 +215,6 @@ class Dilosi(models.Model):
 
 
 class Certificate(models.Model):
-
     cert_id = models.AutoField(primary_key=True)
     cert_type = models.CharField(max_length=50)
     date_requested = models.DateField(auto_now_add=True)
@@ -217,7 +235,6 @@ class Certificate(models.Model):
 
 
 class Thesis(models.Model):
-
     thesis_id = models.AutoField(primary_key=True)
     subject = models.TextField()
     grade = models.FloatField(null=True, blank=True)
@@ -238,7 +255,6 @@ class Thesis(models.Model):
 
 
 class SimmetoxiDrastiriotita(models.Model):
-
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(
         Student, on_delete=models.SET_NULL, null=True)

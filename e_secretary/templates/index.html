@@ -1,0 +1,156 @@
+{% extends 'base_index.html' %}
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/news_feed-styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/events-styles.css'    %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+<!--  -->
+<div class="row" id="tmima">
+  <div class="col">
+    <h2>Τμήμα Ηλεκτρολόγων Μηχανικών και Τεχνολογίας Υπολογιστών</h2>
+  </div>
+</div>
+
+<!-- Events Feed -->
+<div class="row">
+  <div class="col" id="events_container">
+    <h4 class="text-center">Events</h4>
+    <div class="container" id="events_posts">
+      <div class="row" id="events">
+        {% for event in events %}
+        <div class="col-xl-4 col-lg-6 col-xs-12">
+          <div class="events_page my-3">
+            <div class="events_title pt-3 ml-4">
+              <strong> {{ event.content }} </strong>
+            </div>
+            <hr class="events_ruler" />
+            <div>
+              <p class="events_info ml-4">
+                {% if event.old %}
+                <span class="events_date date-text-secondary">{{ event.date }}</span>
+                {% else %}
+                <span class="events_date text-primary">{{ event.date }}</span>
+                {% endif %}
+                <span class="events_location">@ {{ event.location }}</span>
+              </p>
+            </div>
+            <br />
+            {% if event.old %}
+            <hr class="events_date_ruler date-bg-secondary" />
+            {% else %}
+            <hr class="events_date_ruler bg-primary" />
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="d-flex justify-content-center">
+            {% if events.has_other_pages %}
+            <ul class="pagination">
+              {% if events.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ events.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+              {% endif %}
+              {% for i in events.paginator.page_range %}
+              {% if events.number == i %}
+              <li class="active page-item">
+                <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+              {% if events.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}">&raquo;</a></li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+              {% endif %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Events Feed -->
+
+<!-- Events Feed -->
+<div class="row">
+  <div class="col" id="announcements_container">
+    <h4 class="text-center">Announcements</h4>
+    <!-- News Feed -->
+    <div class="container-fluid" id="news_feed_container">
+      <div class="row-fluid" id="announcements">
+        <div class="card-columns">
+          {% for announcement in announcements %}
+
+          <div class="card p-3">
+            {% if announcement.photo %}
+            <img class="card-img-top" src="{{ announcement.photo.url }}" alt="Image" />
+            {% endif %}
+            <div class="card-body">
+              <!-- <h5 class="card-title">Card title that wraps to a new line</h5> -->
+              <p class="card-text">
+                {{ announcement.content }}
+              </p>
+            </div>
+            <p class="card-text"><small class="text-muted"> {{announcement.date}} </small></p>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="d-flex justify-content-center">
+            {% if announcements.has_other_pages %}
+            <ul class="pagination">
+              {% if announcements.has_previous %}
+              <li class="page-item"><a class="page-link"
+                  href="?page={{ announcements.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+              {% endif %}
+              {% for i in announcements.paginator.page_range %}
+              {% if announcements.number == i %}
+              <li class="active page-item">
+                <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+              {% if announcements.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ announcements.next_page_number }}">&raquo;</a>
+              </li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+              {% endif %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Events Feed -->
+</div>
+{% endblock content %} {% block js_files %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock js_files %}
