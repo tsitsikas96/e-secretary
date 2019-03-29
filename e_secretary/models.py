@@ -44,9 +44,9 @@ class Didaskalia(models.Model):
     # Fields
     id = models.AutoField(primary_key=True)
     course_id = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
-    akad_etos = models.IntegerField(choices=YEAR_CHOICES,
+    akad_etos = models.IntegerField(choices=SEMESTER_CHOICES,
                                     default=datetime.now().year)
-    eksamino = models.CharField(max_length=9, choices=SEMESTER_CHOICES)
+    eksamino = models.CharField(max_length=9, choices=YEAR_CHOICES)
 
     # Metadata
     class Meta:
