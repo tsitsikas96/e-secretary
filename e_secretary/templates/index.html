@@ -87,7 +87,7 @@
 <!-- End Events Feed -->
 
 <!-- Events Feed -->
-<div class="row">
+<div class="row mt-3">
   <div class="col" id="announcements_container">
     <h4 class="text-center">Announcements</h4>
     <!-- News Feed -->
@@ -120,7 +120,7 @@
             <ul class="pagination">
               {% if announcements.has_previous %}
               <li class="page-item"><a class="page-link"
-                  href="?page={{ announcements.previous_page_number }}">&laquo;</a></li>
+                  href="?announcements_page={{ announcements.previous_page_number }}">&laquo;</a></li>
               {% else %}
               <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
               {% endif %}
@@ -131,12 +131,13 @@
               </li>
               {% else %}
               <li class="page-item">
-                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                <a class="page-link" href="?announcements_page={{ i }}">{{ i }}</a>
               </li>
               {% endif %}
               {% endfor %}
               {% if announcements.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ announcements.next_page_number }}">&raquo;</a>
+              <li class="page-item"><a class="page-link"
+                  href="?announcements_page={{ announcements.next_page_number }}">&raquo;</a>
               </li>
               {% else %}
               <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
