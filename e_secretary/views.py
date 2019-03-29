@@ -21,7 +21,7 @@ def index(request):
 
     announcements_list = Secr_Announcement.objects.all()
     announcements_paginator = Paginator(announcements_list, 6)
-    announcements_page = request.GET.get('announcement_page')
+    announcements_page = request.GET.get('announcements_page')
     announcements = announcements_paginator.get_page(announcements_page)
 
     context = {
