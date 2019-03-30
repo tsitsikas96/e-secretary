@@ -1,0 +1,62 @@
+{% extends 'base_index.html' %}
+
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/login-styles.css'    %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+{% if user.is_authenticated %}
+<p>Your account doesn't have access to this page. To proceed,
+  please login with an account that has access.</p>
+{% else %}
+<p>Please login to see this page.</p>
+{% endif %}
+{% endif %}
+
+<div class="container">
+  <form class="login-form" action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    <div class="imgcontainer">
+      <img src="{% static 'images/avatar2.png' %}" alt="Avatar" class="avatar img-fluid">
+    </div>
+
+    <div class="container">
+      <div class="form-group">
+        <span> <i class="fas fa-user fa-lg"></i> {{ form.username.label_tag }}</span>
+        <span class="form-control">{{ form.username }}</span>
+      </div>
+
+      <div class="form-group">
+        <span> <i class="fas fa-lock fa-lg"></i> {{ form.password.label_tag }}</span>
+        <span class="form-control"> {{ form.password }} </span>
+      </div>
+
+      <div class="form-group form-check">
+        <!-- <label class="form-check-label">
+          <input type="checkbox" name="remember" class="form-check-input"> Remember me
+        </label> -->
+
+        <span class="psw float-md-right">Forgot <a href="{% url 'password_reset' %}">password?</a></span>
+      </div>
+
+    </div>
+
+    <div class=" form-container" style="background-color:#f1f1f1">
+      <input type="submit" value="login" class="btn btn-primary btn-block" />
+      <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+  </form>
+</div>
+
+
+{% endblock %}

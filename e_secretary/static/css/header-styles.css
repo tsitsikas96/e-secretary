@@ -1,11 +1,12 @@
 /* HEADER */
 .navbar {
     background-color: #F5F5F5;
+    max-height: 100px;
 }
 
 .upatras-logo {
     width: 100%;
-    max-width: 300px;
+    max-width: 200px;
     height: auto;
 }
 

@@ -6,3 +6,4 @@ package.json
 .prettierrc
 .vscode/
 __pycache__/
+sent_emails/
