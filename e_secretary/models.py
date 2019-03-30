@@ -1,6 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from datetime import datetime
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 # Create your models here.
 # YOLO
@@ -122,16 +126,6 @@ class Secr_Announcement(models.Model):
         ordering = ['-date']
 
 
-class Grammateia(models.Model):
-    id = models.AutoField(primary_key=True)
-    fname = models.CharField(max_length=50, help_text='First Name')
-    lname = models.CharField(max_length=50, help_text='Last Name')
-    email = models.EmailField()
-
-    def __str__(self):
-        return f'{self.fname} {self.lname}'
-
-
 class Drastiriotita(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
@@ -160,20 +154,14 @@ class Professor(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
-    fname = models.CharField(max_length=20)
-    lname = models.CharField(max_length=20)
     title = models.CharField(
         max_length=5, choices=PROFESSOR_TITLE, default=PROFESSOR)
-    email = models.EmailField()
     tomeas = models.CharField(max_length=100)
-    didaskalia = models.ManyToManyField(Didaskalia)
+    didaskalia = models.ManyToManyField(Didaskalia, null=True, blank=True)
 
     # Metadata
     class Meta:
-        ordering = ['lname']
-
-    def __str__(self):
-        return f'{self.fname} {self.lname}'
+        ordering = ['title']
 
     # Returns the url to access a particular instance of the model.
 
@@ -183,8 +171,6 @@ class Professor(models.Model):
 
 class Student(models.Model):
     am = models.AutoField(primary_key=True)
-    fname = models.CharField(max_length=20)
-    lname = models.CharField(max_length=20)
     fathername = models.CharField(max_length=20)
     age = models.IntegerField()
     date_eisagwghs = models.DateField(auto_now_add=True)
@@ -194,13 +180,14 @@ class Student(models.Model):
     didaskalia = models.ManyToManyField(Didaskalia, through="Dilosi")
     drastiriotita = models.ManyToManyField(
         Drastiriotita, through="SimmetoxiDrastiriotita")
-    email = models.EmailField()
+    thesis = models.ForeignKey(
+        'Thesis', on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         ordering = ['-am']
 
     def __str__(self):
-        return f'{self.fname} {self.lname} {self.am}'
+        return f'{self.am}'
 
     # Returns the url to access a particular instance of the model.
 
@@ -240,7 +227,6 @@ class Thesis(models.Model):
     grade = models.FloatField(null=True, blank=True)
     date_anathesis = models.DateField(auto_now_add=True)
     date_paradosis = models.DateField(null=True)
-    student_am = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-thesis_id']
@@ -264,3 +250,46 @@ class SimmetoxiDrastiriotita(models.Model):
 
     def __str__(self):
         return f'{self.student}: {self.drastiriotita}'
+
+
+class Profile(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    photo = models.ImageField(
+        upload_to='images/announcements', null=True, blank=True)
+    grammateia = models.BooleanField(default=False)
+    student = models.ForeignKey(
+        Student, on_delete=models.SET_NULL, null=True, blank=True)
+    professor = models.ForeignKey(
+        Professor, on_delete=models.SET_NULL, null=True, blank=True)
+
+    fname = models.CharField(
+        max_length=50, help_text='First Name', default="First")
+    lname = models.CharField(
+        max_length=50, help_text='Last Name', default="Last")
+    email = models.EmailField(null=True, default="test@email.com")
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
+    def __str__(self):
+        return f'{self.id} -  {self.fname} {self.lname}'
+
+    def image_url(self):
+        """
+        Returns the URL of the image associated with this Object.
+        If an image hasn't been uploaded yet, it returns a stock image
+
+        :returns: str -- the image url
+
+        """
+        if self.photo and hasattr(self.photo, 'url'):
+            return self.photo.url
+        else:
+            return '/static/images/avatar2.png'
