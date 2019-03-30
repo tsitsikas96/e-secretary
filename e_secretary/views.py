@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from datetime import datetime, timezone
 from django.contrib.auth.decorators import login_required
@@ -7,6 +7,9 @@ from django.views.generic.list import ListView
 from django.views.decorators.csrf import csrf_exempt
 from e_secretary.models import *
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponseRedirect
+from e_secretary.forms import ChangeAvatarForm
 
 
 def index(request):
@@ -68,3 +71,28 @@ def profile(request):
     }
 
     return render(request, 'profile.html', context=context)
+
+
+@login_required
+def change_avatar(request):
+
+    static_url = settings.STATIC_URL
+    profile_instance = request.user.profile
+
+    if request.method == 'POST':
+        form = ChangeAvatarForm(request.POST, request.FILES)
+        print(request.FILES)
+        if form.is_valid():
+            profile_instance.photo = form.cleaned_data['photo']
+            profile_instance.save()
+            return HttpResponseRedirect(reverse('profile'))
+    else:
+        form = ChangeAvatarForm()
+
+    context = {
+        'form': form,
+        'profile_instance': profile_instance,
+        'STATIC_URL': static_url
+    }
+
+    return render(request, 'change_avatar.html', context=context)

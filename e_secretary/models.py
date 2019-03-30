@@ -256,7 +256,7 @@ class Profile(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     photo = models.ImageField(
-        upload_to='images/announcements', null=True, blank=True)
+        upload_to='images/avatars', null=True, blank=True)
     grammateia = models.BooleanField(default=False)
     student = models.ForeignKey(
         Student, on_delete=models.SET_NULL, null=True, blank=True)

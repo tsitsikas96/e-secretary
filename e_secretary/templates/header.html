@@ -46,6 +46,11 @@
   <a class="navbar-brand" href="{% url 'index' %}"> <img src="{% static 'images/upatras.png' %}" alt="UPatras Logo"
       class="upatras-logo"> </a>
 
+  <a class="nav-link" href="{% url 'index' %}">
+    <i class="fas fa-home"></i>
+    <span class="sr-only">(current)</span>
+  </a>
+
   <a href="{% url 'login' %}" class="btn btn-primary" role="button">Login</a>
 </nav>
 {% endif %}

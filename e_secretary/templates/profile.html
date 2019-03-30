@@ -10,45 +10,45 @@
 
 {% block content %}
 <div class="container emp-profile">
-  <form method="post">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="profile-img">
-          <img src="{{profile_id.image_url}}" alt="" />
-          <div class="file btn btn-lg btn-primary">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile-img" id="avatar_box">
+        <img src="{{profile_id.image_url}}" alt="" />
+        <div class="file btn" id="change_avatar_button">
+          <a href="{% url 'change-avatar' %}" class="text-white">
             Change Photo
-            <input type="file" name="file" />
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="profile-head">
-          <h5>
-            {{profile_id.user.first_name}} {{profile_id.user.last_name}}
-          </h5>
-          <h6>
-            {{profile_id.idiotita}}
-          </h6>
-          {% if profile_id.is_student %}
-          <p class="proile-rating">ΕΤΟΣ : <span>{{profile_id.etos}}</span></p>
-          {% endif %}
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">About</a>
-            </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Timeline</a>
-            </li> -->
-          </ul>
+          </a>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="profile-work">
-          <!-- <p>WORK LINK</p>
+    <div class="col-md-6">
+      <div class="profile-head">
+        <h5>
+          {{profile_id.user.first_name}} {{profile_id.user.last_name}}
+        </h5>
+        <h6>
+          {{profile_id.idiotita}}
+        </h6>
+        {% if profile_id.is_student %}
+        <p class="proile-rating">ΕΤΟΣ : <span>{{profile_id.etos}}</span></p>
+        {% endif %}
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+              aria-selected="true">About</a>
+          </li>
+          <!-- <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                aria-selected="false">Timeline</a>
+            </li> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile-work">
+        <!-- <p>WORK LINK</p>
           <a href="">Website Link</a><br />
           <a href="">Bootsnipp Profile</a><br />
           <a href="">Bootply Profile</a>
@@ -58,66 +58,66 @@
           <a href="">WordPress</a><br />
           <a href="">WooCommerce</a><br />
           <a href="">PHP, .Net</a><br /> -->
-        </div>
       </div>
+    </div>
 
 
-      <div class="col-md-8">
-        <div class="tab-content profile-tab" id="myTabContent">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="row">
-              <div class="col-md-6">
-                <label>Όνομα</label>
-              </div>
-              <div class="col-md-6">
-                <p>{{profile_id.user.first_name}} {{profile_id.user.last_name}}</p>
-              </div>
+    <div class="col-md-8">
+      <div class="tab-content profile-tab" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="row">
+            <div class="col-md-6">
+              <label>Όνομα</label>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Ιδιότητα</label>
-              </div>
-              <div class="col-md-6">
-                <p>{{profile_id.idiotita}}</p>
-              </div>
+            <div class="col-md-6">
+              <p>{{profile_id.user.first_name}} {{profile_id.user.last_name}}</p>
             </div>
-            {% if profile_id.is_student %}
-            <div class="row">
-              <div class="col-md-6">
-                <label>Αριθμός Μητρώου</label>
-              </div>
-              <div class="col-md-6">
-                <p>{{profile_id.student.am}}</p>
-              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label>Ιδιότητα</label>
             </div>
-            {% endif %}
-            <div class="row">
-              <div class="col-md-6">
-                <label>Email</label>
-              </div>
-              <div class="col-md-6">
-                <p> <a href="mailto:{{profile_id.user.email}}">{{profile_id.user.email}}</a> </p>
-              </div>
+            <div class="col-md-6">
+              <p>{{profile_id.idiotita}}</p>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Μέλος από</label>
-              </div>
-              <div class="col-md-6">
-                <p>{{profile_id.user.date_joined|date:"d M Y"}}</p>
-              </div>
+          </div>
+          {% if profile_id.is_student %}
+          <div class="row">
+            <div class="col-md-6">
+              <label>Αριθμός Μητρώου</label>
             </div>
-            {% if profile_id.is_student %}
-            <div class="row">
-              <div class="col-md-6">
-                <label>Διπλωματική Εργασία</label>
-              </div>
-              <div class="col-md-6">
-                <p>{{user.profile.student.thesis.subject}}</p>
-              </div>
+            <div class="col-md-6">
+              <p>{{profile_id.student.am}}</p>
             </div>
-            {% endif %}
-            <!-- <div class="row">
+          </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-6">
+              <label>Email</label>
+            </div>
+            <div class="col-md-6">
+              <p> <a href="mailto:{{profile_id.user.email}}">{{profile_id.user.email}}</a> </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label>Μέλος από</label>
+            </div>
+            <div class="col-md-6">
+              <p>{{profile_id.user.date_joined|date:"d M Y"}}</p>
+            </div>
+          </div>
+          {% if profile_id.is_student %}
+          <div class="row">
+            <div class="col-md-6">
+              <label>Διπλωματική Εργασία</label>
+            </div>
+            <div class="col-md-6">
+              <p>{{user.profile.student.thesis.subject}}</p>
+            </div>
+          </div>
+          {% endif %}
+          <!-- <div class="row">
                 <div class="col-md-6">
                   <label>Phone</label>
                 </div>
@@ -125,8 +125,8 @@
                   <p>123 456 7890</p>
                 </div>
               </div> -->
-          </div>
-          <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        </div>
+        <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
               <div class="row">
                 <div class="col-md-6">
                   <label>Experience</label>
@@ -174,13 +174,16 @@
                 </div>
               </div>
             </div> -->
-        </div>
       </div>
-
-
-
     </div>
-  </form>
+
+
+
+  </div>
 </div>
 
 {% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/avatar.js' %}"></script>
+{% endblock js_files %}
