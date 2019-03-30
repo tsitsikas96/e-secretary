@@ -40,19 +40,7 @@
 
   <!-- Header -->
   <div id="header">
-    {% if user.is_authenticated %}
     {% include 'header_user.html' %}
-    {% else %}
-    <!--Navbar -->
-    <nav class="navbar navbar-expand-md navbar-light">
-      <a class="navbar-brand" href="https://www.upatras.gr"> <img src="{% static 'images/upatras.png' %}"
-          alt="UPatras Logo" class="upatras-logo"> </a>
-
-      <a href="{% url 'login' %}" class="btn btn-primary" role="button">Login</a>
-    </nav>
-    <!--/.Navbar -->
-
-    {% endif %}
   </div>
 
   <div class="container-fluid main-container">
@@ -86,6 +74,7 @@
   </div>
 
   {% block js_files %}
+  <script src="{% static 'js/main.js' %}"></script>
   {% endblock js_files %}
 </body>
 

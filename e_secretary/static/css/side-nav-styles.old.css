@@ -118,12 +118,12 @@
     border-bottom: 1px solid #23282e;
 }
 
-.nav-side-menu a {
+.nav-side-menu li a {
     text-decoration: none;
     color: #e1ffff;
 }
 
-.nav-side-menu a i {
+.nav-side-menu li a i {
     padding-left: 0.7em;
     width: 1.3em;
     padding-right: 1.6em;

@@ -1,11 +1,19 @@
-window.onload = function () {
+function setNavigation() {
+  let path = $(location).attr('pathname');
+  // path = path.replace(/\/$/, '');
+  path = decodeURIComponent(path);
 
-  $.getScript('static/js/sidebar.js', function () {
-    setNavigation();
+  $('#menu-content a').each(function () {
+    let href = $(this).attr('href');
+    // href = href.replace(/\/$ (url)''/, '')
+    // if (path.substring(1, href.length + 1) === href) {
+    if (path === href) {
+      $(this).children("li").addClass('active');
+    }
   });
+}
 
-  // $.getScript('static/js/events_feed.js', function () {
-  //   generate_events();
-  // });
 
+window.onload = function () {
+  setNavigation();
 };

@@ -263,12 +263,6 @@ class Profile(models.Model):
     professor = models.ForeignKey(
         Professor, on_delete=models.SET_NULL, null=True, blank=True)
 
-    fname = models.CharField(
-        max_length=50, help_text='First Name', default="First")
-    lname = models.CharField(
-        max_length=50, help_text='Last Name', default="Last")
-    email = models.EmailField(null=True, default="test@email.com")
-
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:

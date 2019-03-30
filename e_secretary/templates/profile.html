@@ -24,7 +24,7 @@
       <div class="col-md-6">
         <div class="profile-head">
           <h5>
-            {{profile_id.fname}} {{profile_id.lname}}
+            {{profile_id.user.first_name}} {{profile_id.user.last_name}}
           </h5>
           <h6>
             {{idiotita}}
@@ -70,7 +70,7 @@
                 <label>Όνομα</label>
               </div>
               <div class="col-md-6">
-                <p>{{profile_id.fname}} {{profile_id.lname}}</p>
+                <p>{{profile_id.user.first_name}} {{profile_id.user.last_name}}</p>
               </div>
             </div>
             <div class="row">
@@ -96,7 +96,7 @@
                 <label>Email</label>
               </div>
               <div class="col-md-6">
-                <p> <a href="mailto:{{profile_id.email}}">{{profile_id.email}}</a> </p>
+                <p> <a href="mailto:{{profile_id.user.email}}">{{profile_id.user.email}}</a> </p>
               </div>
             </div>
             <div class="row">
