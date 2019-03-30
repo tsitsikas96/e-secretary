@@ -59,28 +59,12 @@ def profile(request):
         profile_obj = Profile.objects.get(id=profile_id)
         user = profile_obj.user
 
-    if (user.groups.filter(name__in=['Students']).exists()):
-        idiotita = "Φοιτητής"
-        is_student = True
-        etos = abs(datetime.now().year -
-                   user.profile.student.date_eisagwghs.year) + 1
-    elif (user.groups.filter(name__in=['Professor']).exists()):
-        idiotita = user.profile.professor.get_title_display()
-        is_professor = True
-    elif (user.profile.grammateia):
-        idiotita = "Γραμματεία"
-        is_grammateia = True
-
     profile_id = user.profile
 
     context = {
         'STATIC_URL': static_url,
         'idiotita': idiotita,
-        'is_grammateia': is_grammateia,
-        'is_student': is_student,
-        'is_professor': is_professor,
         'profile_id': profile_id,
-        'etos': etos,
     }
 
     return render(request, 'profile.html', context=context)

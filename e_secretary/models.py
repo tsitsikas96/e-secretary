@@ -272,6 +272,31 @@ class Profile(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
+    def etos(self):
+        if(self.is_student()):
+            return abs(datetime.now().year - self.student.date_eisagwghs.year) + 1
+
+    def idiotita(self):
+        if (self.is_student()):
+            return u'Φοιτητής'
+        elif (self.is_professor()):
+            return self.professor.get_title_display()
+        elif (self.is_grammateia()):
+            return u'Γραμματεία'
+
+    def is_student(self):
+        if (self.student is not None):
+            return True
+        return False
+
+    def is_professor(self):
+        if (self.professor is not None):
+            return True
+        return False
+
+    def is_grammateia(self):
+        return self.grammateia
+
     def __str__(self):
         return f'{self.id} -  {self.fname} {self.lname}'
 

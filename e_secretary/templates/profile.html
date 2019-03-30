@@ -27,10 +27,10 @@
             {{profile_id.user.first_name}} {{profile_id.user.last_name}}
           </h5>
           <h6>
-            {{idiotita}}
+            {{profile_id.idiotita}}
           </h6>
-          {% if is_student %}
-          <p class="proile-rating">ΕΤΟΣ : <span>{{etos}}</span></p>
+          {% if profile_id.is_student %}
+          <p class="proile-rating">ΕΤΟΣ : <span>{{profile_id.etos}}</span></p>
           {% endif %}
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
@@ -78,10 +78,10 @@
                 <label>Ιδιότητα</label>
               </div>
               <div class="col-md-6">
-                <p>{{idiotita}}</p>
+                <p>{{profile_id.idiotita}}</p>
               </div>
             </div>
-            {% if is_student %}
+            {% if profile_id.is_student %}
             <div class="row">
               <div class="col-md-6">
                 <label>Αριθμός Μητρώου</label>
@@ -107,7 +107,7 @@
                 <p>{{profile_id.user.date_joined|date:"d M Y"}}</p>
               </div>
             </div>
-            {% if is_student %}
+            {% if profile_id.is_student %}
             <div class="row">
               <div class="col-md-6">
                 <label>Διπλωματική Εργασία</label>
