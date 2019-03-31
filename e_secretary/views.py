@@ -81,10 +81,15 @@ def change_avatar(request):
 
     if request.method == 'POST':
         form = ChangeAvatarForm(request.POST, request.FILES)
-        print(request.FILES)
+
+        print(form)
+
         if form.is_valid():
-            profile_instance.photo = form.cleaned_data['photo']
-            profile_instance.save()
+            if(form.cleaned_data['delete_photo']):
+                profile_instance.photo.delete(save=True)
+            elif(form.cleaned_data['photo']):
+                profile_instance.photo = form.cleaned_data['photo']
+                profile_instance.save()
             return HttpResponseRedirect(reverse('profile'))
     else:
         form = ChangeAvatarForm()
