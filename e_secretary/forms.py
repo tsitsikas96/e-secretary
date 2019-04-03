@@ -25,3 +25,11 @@ class ChangeAvatarForm(forms.Form):
                 "You must delete the avatar or upload an image.")
 
         return cleaned_data
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField(
+        required=False,
+    )
+
+    fields = ['file']

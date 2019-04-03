@@ -1,0 +1,137 @@
+{% extends 'base_index.html' %}
+
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/ergasies.css'    %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+
+{% if request.user.profile.is_student %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Navbar -->
+    <div class="col-12">
+      {% include "course_navbar.html" %}
+    </div>
+  </div>
+
+  <!-- ALL ERGASIES -->
+  {% if not ergasia %}
+  <div class="row mt-5">
+    <div class="col-12">
+      <h5 class="text-left">{{didaskalia.get_name}}</h5>
+      <h6 class="text-left">Εργασίες</h6>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <table class="table table-striped mt-4 ergasies_table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Τίτλος</th>
+                <th scope="col">Προθεσμία</th>
+                <th scope="col">Έχει αποσταλεί;</th>
+                <th scope="col">Βαθμός</th>
+              </tr>
+            </thead>
+
+            {% if request.user.profile.is_student %}
+            <tbody>
+              {% for ergasia in ergasies %}
+              <tr class="announcement">
+                <td> <a
+                    href="{% url 'ergasia' didaskalia_id=ergasia.drastiriotita.didaskalia.id ergasia_id=ergasia.id%}">{{ergasia.drastiriotita.title}}</a>
+                </td>
+                <td>
+                  <div>
+                    {{ergasia.drastiriotita.due_date}}
+                  </div>
+                  <div>
+                    {{ergasia.drastiriotita.time_left}}
+                  </div>
+                </td>
+                <td> {{ergasia.delivered}} </td>
+                <td> {{ergasia.get_grade}} </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            {% endif %}
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {%endif%}
+
+  <!-- SPECIFIC ERGASIA -->
+  {% if ergasia %}
+  <div class="row mt-5">
+    <div class="col-12">
+      <h5 class="text-left">{{didaskalia.get_name}}</h5>
+
+      <div class="ergasia_stoixeia_container">
+        <div class="ergasia_stoixeia_titlos text-white pl-4">
+          <p>Στοιχεία Εργασίας</p>
+        </div>
+        <div class="ergasia_stoixeia container-fluid mb-3">
+          <div class="row">
+            <div class="col-3 ergasia_stoixeia_first_col">Τίτλος</div>
+            <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.drastiriotita.title}}</div>
+          </div>
+          <div class="row">
+            <div class="col-3 ergasia_stoixeia_first_col">Περιγραφή</div>
+            <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.drastiriotita.perigrafi}}</div>
+          </div>
+          <div class="row">
+            <div class="col-3 ergasia_stoixeia_first_col">Ημερομηνία Λήξης</div>
+            <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.drastiriotita.due_date}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ergasia_ipoboli_container mt-5">
+        <div class="ergasia_ipoboli_titlos bg-secondary text-white pl-4">
+          <p>Στοιχεία Εργασίας</p>
+        </div>
+        <div class="ergasia_ipoboli container-fluid mb-3">
+          <div class="row">
+            <div class="col-3 ergasia_ipoboli_first_col">Έχει υποβληθεί;</div>
+            <div class="col-9 ergasia_ipoboli_sec_col">{{ergasia.delivered}}</div>
+          </div>
+          <div class="row">
+            <div class="col-3 ergasia_ipoboli_first_col">Βαθμός</div>
+            <div class="col-9 ergasia_ipoboli_sec_col">{{ergasia.grade}}</div>
+          </div>
+          <div class="row">
+            <div class="col-3 ergasia_ipoboli_first_col">Αρχείο</div>
+            <div class="col-9 ergasia_ipoboli_sec_col">
+              {% if ergasia.file %}
+              <a href="{{ergasia.file.url}}">{{ergasia.file.name}}</a>
+              {% endif %}
+              {% if ergasia.drastiriotita.due_date_not_passed %}
+              <form method="post" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="file" id="file">
+                <input type="submit" value="Submit" id="submit_file">
+              </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endif %}
+
+{% if request.user.profile.is_professor %}
+TODO
+{% endif %}
+
+{% endblock %}

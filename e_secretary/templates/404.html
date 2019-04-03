@@ -1,0 +1,14 @@
+{% extends 'base_index.html' %}
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/news_feed-styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/events-styles.css'    %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+404 ERROR
+{% endblock content %}
+<!--  -->

@@ -5,20 +5,19 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.views.generic.list import ListView
 from django.views.decorators.csrf import csrf_exempt
-from e_secretary.models import *
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponseRedirect
-from e_secretary.forms import ChangeAvatarForm
+from django.http import HttpResponseRedirect, Http404
+from e_secretary.forms import ChangeAvatarForm, FileUploadForm
+from django.views import View
+
+from e_secretary.models import *
 
 
 def index(request):
 
-    static_url = settings.STATIC_URL
-
     event_list = Event.objects.all()
     event_paginator = Paginator(event_list, 3)
-
     event_page = request.GET.get('page')
     events = event_paginator.get_page(event_page)
 
@@ -34,7 +33,6 @@ def index(request):
     context = {
         'events': events,
         'announcements': announcements,
-        'STATIC_URL': static_url
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -43,16 +41,6 @@ def index(request):
 
 @login_required
 def profile(request):
-
-    static_url = settings.STATIC_URL
-
-    idiotita = None
-    is_student = False
-    is_professor = False
-    is_grammateia = False
-    user = None
-    temp = None
-    etos = None
 
     profile_id = request.GET.get('profile_id')
 
@@ -65,8 +53,6 @@ def profile(request):
     profile_id = user.profile
 
     context = {
-        'STATIC_URL': static_url,
-        'idiotita': idiotita,
         'profile_id': profile_id,
     }
 
@@ -76,13 +62,10 @@ def profile(request):
 @login_required
 def change_avatar(request):
 
-    static_url = settings.STATIC_URL
     profile_instance = request.user.profile
 
     if request.method == 'POST':
         form = ChangeAvatarForm(request.POST, request.FILES)
-
-        print(form)
 
         if form.is_valid():
             if(form.cleaned_data['delete_photo']):
@@ -97,7 +80,104 @@ def change_avatar(request):
     context = {
         'form': form,
         'profile_instance': profile_instance,
-        'STATIC_URL': static_url
     }
 
     return render(request, 'change_avatar.html', context=context)
+
+
+@login_required
+def my_courses(request):
+
+    announcements_max = 5
+    didaskalies_max = 5
+
+    context = {}
+
+    if request.method == 'GET':
+        didaskalies_list = request.user.profile.get_my_courses()
+        didaskalies_paginator = Paginator(didaskalies_list, didaskalies_max)
+        didaskalies_page = request.GET.get('didaskalies_page') or 1
+        didaskalies = didaskalies_paginator.get_page(didaskalies_page)
+        didaskalies_page_counter = didaskalies_max*(int(didaskalies_page)-1)
+
+        announcements_list = Announcement.objects.filter(
+            didaskalia_id__in=didaskalies_list)
+        announcements_paginator = Paginator(
+            announcements_list, announcements_max)
+        announcements_page = request.GET.get('announcements_page') or 1
+        announcements = announcements_paginator.get_page(announcements_page)
+        announcements_page_counter = announcements_max * \
+            (int(announcements_page)-1)
+
+        context['didaskalies'] = didaskalies
+        context['didaskalies_page_counter'] = didaskalies_page_counter
+        context['announcements'] = announcements
+        context['announcements_page_counter'] = announcements_page_counter
+
+    return render(request, 'my_courses.html', context=context)
+
+
+@login_required
+def course(request, didaskalia_id):
+
+    announcements_max = 5
+
+    didaskalia = Didaskalia.objects.get(id=didaskalia_id)
+
+    if(request.user.profile.student.parakolouthei(didaskalia_id) is False):
+        raise Http404("")
+
+    announcements_list = Announcement.objects.filter(
+        didaskalia_id=didaskalia)
+    announcements_paginator = Paginator(
+        announcements_list, announcements_max)
+    announcements_page = request.GET.get('announcements_page') or 1
+    announcements = announcements_paginator.get_page(announcements_page)
+    announcements_page_counter = announcements_max * \
+        (int(announcements_page)-1)
+
+    context = {
+        'didaskalia': didaskalia,
+    }
+    context['announcements'] = announcements
+    context['announcements_page_counter'] = announcements_page_counter
+
+    return render(request, 'course.html', context=context)
+
+
+@login_required
+def ergasies(request, didaskalia_id, ergasia_id=None):
+
+    announcements_max = 5
+    ergasia = None
+
+    if(request.user.profile.student.parakolouthei(didaskalia_id) is False):
+        raise Http404()
+
+    didaskalia = Didaskalia.objects.get(id=didaskalia_id)
+    user_profile = request.user.profile
+    drastiriotites = Drastiriotita.objects.filter(
+        didaskalia_id=didaskalia, tipos=Drastiriotita.ERGASIA)
+    ergasies = None
+    ergasies = SimmetoxiDrastiriotita.objects.filter(
+        id__in=drastiriotites, student=request.user.profile.student
+    )
+
+    if(ergasia_id in ergasies.values_list('id', flat=True)):
+        ergasia = SimmetoxiDrastiriotita.objects.get(
+            id=ergasia_id, student=request.user.profile.student)
+        if(request.method == 'POST'):
+            form = FileUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                if(form.cleaned_data['file']):
+                    ergasia.file.delete(save=True)
+                    ergasia.file = form.cleaned_data['file']
+                    ergasia.save()
+
+    context = {
+        'didaskalia': didaskalia,
+        'ergasies': ergasies,
+        'ergasia': ergasia,
+    }
+
+    return render(request, 'ergasies.html', context=context)

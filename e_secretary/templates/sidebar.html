@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="nav-side-menu">
   <div class="brand">University of Patras</div>
   <div class="foititis">
@@ -20,43 +22,51 @@
         </li>
       </a>
 
-      <a href="dilwseis.html">
+      {% if user.profile.is_student %}
+      <a href="#">
         <li class="menu-option" id="dilwseis-option">
           <i class="far fa-file-alt fa-lg"></i> Δηλώσεις
         </li>
       </a>
+      {% endif %}
 
-      <a href="grades.html">
+      {% if user.profile.is_student %}
+      <a href="#">
         <li class="menu-option" id="grades-option">
           <i class="fa fa-user-graduate fa-lg"></i> Βαθμολογίες
         </li>
       </a>
+      {% endif %}
 
-      <a href="my-courses.html">
+      <a href="{% url 'my_courses' %}">
         <li class="menu-option" id="my-courses-option">
           <i class="fa fa-clipboard-check fa-lg"></i> Τα Μαθήματά μου
         </li>
       </a>
 
-      <a href="calendar.html">
+      <a href="#">
         <li class="menu-option" id="calendar-option">
           <i class="fa fa-calendar-alt fa-lg"></i> Ωρολόγιο Πρόγραμμα
         </li>
       </a>
 
-      <a href="pistopoitika.html">
+      {% if user.profile.is_student %}
+      <a href="#">
         <li class="menu-option" id="pistopoitika-option">
           <i class="fa fa-certificate fa-lg"></i> Πιστοποιητικά
         </li>
       </a>
+      {% endif %}
 
-      <a href="aitiseis.html">
+      {% if user.profile.is_student %}
+      <a href="#">
         <li class="menu-option" id="aitiseis-option">
           <i class="fa fa-stream fa-lg"></i> Αιτήσεις
         </li>
       </a>
+      {% endif %}
 
-      <a href="assets/pdf/sample.pdf" target="blank">
+      <a href="{% static 'pdf/sample.pdf' %}" target="blank">
         <li class="menu-option" id="odigos-spoudwn-option">
           <i class="fa fa-thumbtack fa-lg"></i> Οδηγός Σπουδών
       </a>
