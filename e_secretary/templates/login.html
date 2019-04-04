@@ -33,12 +33,12 @@
     <div class="container">
       <div class="form-group">
         <span> <i class="fas fa-user fa-lg"></i> {{ form.username.label_tag }}</span>
-        <span class="form-control">{{ form.username }}</span>
+        <span>{{ form.username }}</span>
       </div>
 
       <div class="form-group">
         <span> <i class="fas fa-lock fa-lg"></i> {{ form.password.label_tag }}</span>
-        <span class="form-control"> {{ form.password }} </span>
+        <span> {{ form.password }} </span>
       </div>
 
       <div class="form-group form-check">
@@ -51,7 +51,7 @@
 
     </div>
 
-    <div class=" form-container" style="background-color:#f1f1f1">
+    <div class=" form-container mt-5" style="background-color:#f1f1f1">
       <input type="submit" value="login" class="btn btn-primary btn-block" />
       <input type="hidden" name="next" value="{{ next }}" />
     </div>

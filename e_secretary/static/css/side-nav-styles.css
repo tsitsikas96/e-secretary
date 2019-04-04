@@ -1,6 +1,7 @@
 #leftSideBar {
     padding-left: 0;
     max-width: 340px;
+    min-height: 700px;
 }
 
 .nav-side-menu {

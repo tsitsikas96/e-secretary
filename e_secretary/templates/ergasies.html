@@ -1,0 +1,30 @@
+{% extends 'base_index.html' %}
+
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/ergasies.css'    %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Navbar -->
+    <div class="col-12">
+      {% include "course_navbar.html" %}
+    </div>
+  </div>
+
+  {% if request.user.profile.is_student %}
+  {% include 'ergasies_student.html' %}
+  {% endif %}
+
+  {% if request.user.profile.is_professor %}
+  {% include 'ergasies_professor.html' %}
+  {% endif %}
+
+</div>
+
+{% endblock %}

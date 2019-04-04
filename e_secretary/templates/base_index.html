@@ -40,7 +40,7 @@
 
   <!-- Header -->
   <div id="header">
-    {% include 'header_user.html' %}
+    {% include 'header.html' %}
   </div>
 
   <div class="container-fluid main-container">
@@ -48,7 +48,7 @@
       <!-- Side Nav Bar -->
       {% if user.is_authenticated %}
       <div class="col-xl-3 col-lg-3 col-md-4 pl-0" id="leftSideBar">
-        {% include "sidebar_student.html" %}
+        {% include "sidebar.html" %}
       </div>
       {% endif %}
 

@@ -1,0 +1,76 @@
+{% extends 'base_index.html' %}
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/new_ergasia.css' %}">
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+<!--  -->
+
+{% block content %}
+<div class="container-fuild">
+  <div class="row">
+    <div class="col-12">
+      <form action="" method="post" enctype="multipart/form-data" id="new_ergasia_form">
+        {% csrf_token %}
+        <div>
+          <span><i class="fas fa-circle fa-xs"></i> Τίτλος: </span>
+          <span>{{ form.title }}</span>
+        </div>
+
+        <div>
+          <span><i class="fas fa-circle fa-xs"></i> Τύπος: </span>
+          <span>
+            <select name="tipos" form="new_ergasia_form">
+              <option value="ERGASIA">Εργασία</option>
+              <option value="PROODOS">Πρόοδος</option>
+              <option value="ERGASTIRIO">Εργαστήριο</option>
+              <option value="EKSTETASTIKI">Εξεταστική</option>
+            </select>
+          </span>
+        </div>
+
+        <div>
+          <span><i class="fas fa-circle fa-xs"></i> Συντελεστής: </span>
+          <span>{{ form.sintelestis }}</span>
+        </div>
+
+        <div>
+          <span><i class="fas fa-circle fa-xs"></i> Due Date: </span>
+          <input type="date" name="due_date" width="20em">
+        </div>
+
+        <div>
+          <span style="display:block" class="mb-2"><i class="fas fa-circle fa-xs"></i> Περιγραφή: </span>
+          <span>{{ form.perigrafi }}</span>
+        </div>
+
+        <div>
+          <span><i class="fas fa-circle fa-xs"></i> Αρχείο: </span>
+          <span>{{ form.file }}</span>
+        </div>
+
+        <input type="submit" value="Submit">
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}
+<!--  -->
+
+
+{% block js_files %}
+{{ block.super }}
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<script>
+  $('#due_date').datepicker({
+    datepicker: {
+      showOtherMonths: true,
+      calendarWeeks: true,
+    }
+  });
+</script>
+{% endblock %}

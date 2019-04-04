@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'e_secretary',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,5 @@ LOGOUT_REDIRECT_URL = '/'
 # EMAIL_PORT =
 # EMAIL_USE_SSL =
 # EMAIL_USE_TLS =
+
+AUTH_PROFILE_MODULE = 'e_secretary.Profile'

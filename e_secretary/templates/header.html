@@ -2,7 +2,7 @@
 {% if user.is_authenticated %}
 <nav class="navbar navbar-expand-md navbar-light" id="header">
   {% load static %}
-  <a class="navbar-brand" href="{% url 'index' %}"> <img src="{{STATIC_URL}}images/upatras.png" alt="UPatras Logo"
+  <a class="navbar-brand" href="{% url 'index' %}"> <img src="{% static 'images/upatras.png'%}" alt="UPatras Logo"
       class="upatras-logo"> </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
     aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,7 @@
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">
           {% load static %}
-          <img src="{{STATIC_URL}}images/avatar.png" class="rounded-circle z-depth-0" alt="avatar image">
+          <img src="{% static 'images/avatar.png' %}" class="rounded-circle z-depth-0" alt="avatar image">
         </a>
         <div class="dropdown-menu dropdown-menu-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-55">
           <a class="dropdown-item" href="{% url 'profile' %}">
@@ -45,6 +45,11 @@
 <nav class="navbar navbar-expand-md navbar-light">
   <a class="navbar-brand" href="{% url 'index' %}"> <img src="{% static 'images/upatras.png' %}" alt="UPatras Logo"
       class="upatras-logo"> </a>
+
+  <a class="nav-link" href="{% url 'index' %}">
+    <i class="fas fa-home"></i>
+    <span class="sr-only">(current)</span>
+  </a>
 
   <a href="{% url 'login' %}" class="btn btn-primary" role="button">Login</a>
 </nav>
