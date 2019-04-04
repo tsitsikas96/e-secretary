@@ -11,4 +11,6 @@ urlpatterns = [
     path('ergasies/<int:didaskalia_id>/', views.ergasies, name='ergasies'),
     path('ergasies/<int:didaskalia_id>/<int:ergasia_id>/',
          views.ergasies, name='ergasia'),
+    path('new_ergasia/<int:didaskalia_id>',
+         views.new_ergasia, name='new_ergasia'),
 ]

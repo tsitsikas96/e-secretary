@@ -1,0 +1,138 @@
+<!-- ALL ERGASIES -->
+{% if not ergasia %}
+
+<div class="row mt-5">
+  <div class="col-12">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-9">
+          <h4 class="text-left">Εργασίες</h4>
+        </div>
+        <div class="col-3">
+          <a href="{% url 'new_ergasia' didaskalia_id=didaskalia_id %}" class="btn btn-primary">Νέα Εργασία</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <table class="table table-striped mt-4 ergasies_table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Τίτλος</th>
+              <th scope="col">Προθεσμία</th>
+              <th scope="col">Έχει αποσταλεί από</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for ergasia in ergasies %}
+            <tr class="announcement">
+              <td> <a
+                  href="{% url 'ergasia' didaskalia_id=ergasia.didaskalia.id ergasia_id=ergasia.id%}">{{ergasia.title}}</a>
+              </td>
+              <td>
+                <div>
+                  {{ergasia.due_date}}
+                </div>
+                <div>
+                  {{ergasia.time_left}}
+                </div>
+              </td>
+              <td> {{ergasia.people_delivered}}/{{ergasia.people_to_deliver}} </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+{%endif%}
+
+<!-- SPECIFIC ERGASIA -->
+{% if ergasia %}
+<div class="row mt-5">
+  <div class="col-12">
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="ergasia_stoixeia_container">
+          <div class="ergasia_stoixeia_titlos text-white pl-4">
+            <p>Στοιχεία Εργασίας</p>
+          </div>
+          <div class="ergasia_stoixeia container-fluid mb-3">
+            <div class="row">
+              <div class="col-3 ergasia_stoixeia_first_col">Τίτλος</div>
+              <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.title}}</div>
+            </div>
+            <div class="row">
+              <div class="col-3 ergasia_stoixeia_first_col">Περιγραφή</div>
+              <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.perigrafi}}</div>
+            </div>
+            <div class="row">
+              <div class="col-3 ergasia_stoixeia_first_col">Ημερομηνία Λήξης</div>
+              <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.due_date}}</div>
+            </div>
+            <div class="row">
+              <div class="col-3 ergasia_stoixeia_first_col">Αρχείο</div>
+              <div class="col-9 ergasia_stoixeia_sec_col">
+                {% if ergasia.file %}
+                <a href="{{ergasia.file.url}}" download>{{ergasia.file.name}}</a>
+                {% else %}
+                -
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-12">
+
+    <table class="table table-striped mt-4">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">ΑΜ</th>
+          <th scope="col">Φοιτητής</th>
+          <th scope="col">Αρχείο</th>
+          <th scope="col">Βαθμός</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for student in registered %}
+        <tr>
+          <td>
+            {{student.student.am}}
+          </td>
+          <td>
+            {{student.student.name}}
+          </td>
+          <td>
+            {% if student.file %}
+            <a href="{{student.file.url}}" download>{{student.file.name}}</a>
+            {% else %}
+            -
+            {% endif %}
+          </td>
+          <td>
+            {{student.grade}}
+            <form method="post" action="">
+              {% csrf_token %}
+              <input type="text" name="grade" id="grade">
+              <input type="hidden" name="student_id" id="student_id" value="{{student.student.am}}">
+              <input type="submit" value="OK" id="submit_grade">
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}

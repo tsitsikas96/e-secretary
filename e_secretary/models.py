@@ -158,7 +158,7 @@ class Drastiriotita(models.Model):
 
     id = models.AutoField(primary_key=True)
     didaskalia = models.ForeignKey(
-        Didaskalia, on_delete=models.SET_NULL, null=True)
+        Didaskalia, on_delete=models.CASCADE)
     sintelestis = models.FloatField()
     due_date = models.DateTimeField()
     tipos = models.CharField(max_length=25, choices=DRASTIRIOTITES_CHOICES)
@@ -178,6 +178,14 @@ class Drastiriotita(models.Model):
         time = self.due_date - datetime.now(timezone.utc)
         time = str(time).split(".")[0]
         return f'{time} Hours'
+
+    def people_to_deliver(self):
+        return SimmetoxiDrastiriotita.objects.filter(
+            drastiriotita=self).count()
+
+    def people_delivered(self):
+        return SimmetoxiDrastiriotita.objects.filter(
+            drastiriotita=self, delivered=True).count()
 
 
 class Professor(models.Model):
@@ -205,7 +213,11 @@ class Professor(models.Model):
     class Meta:
         ordering = ['title']
 
-    # Returns the url to access a particular instance of the model.
+    def didaskei(self, didaskalia_id):
+        didaskei = self.didaskalia.all().values_list('id', flat=True)
+        if(didaskalia_id in didaskei):
+            return True
+        return False
 
     def get_absolute_url(self):
         return reverse('model-detail-view', args=[str(self.id)])

@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect, Http404
-from e_secretary.forms import ChangeAvatarForm, FileUploadForm
+from e_secretary.forms import *
 from django.views import View
 
 from e_secretary.models import *
@@ -121,11 +121,15 @@ def my_courses(request):
 def course(request, didaskalia_id):
 
     announcements_max = 5
-
+    user_profile = request.user.profile
     didaskalia = Didaskalia.objects.get(id=didaskalia_id)
 
-    if(request.user.profile.student.parakolouthei(didaskalia_id) is False):
-        raise Http404("")
+    if(user_profile.is_student()):
+        if(user_profile.student.parakolouthei(didaskalia_id) is False):
+            raise Http404()
+    elif(user_profile.is_professor()):
+        if(user_profile.professor.didaskei(didaskalia_id) is False):
+            raise Http404()
 
     announcements_list = Announcement.objects.filter(
         didaskalia_id=didaskalia)
@@ -149,35 +153,92 @@ def course(request, didaskalia_id):
 def ergasies(request, didaskalia_id, ergasia_id=None):
 
     announcements_max = 5
-    ergasia = None
-
-    if(request.user.profile.student.parakolouthei(didaskalia_id) is False):
-        raise Http404()
-
     didaskalia = Didaskalia.objects.get(id=didaskalia_id)
     user_profile = request.user.profile
     drastiriotites = Drastiriotita.objects.filter(
-        didaskalia_id=didaskalia, tipos=Drastiriotita.ERGASIA)
+        didaskalia_id=didaskalia)
     ergasies = None
-    ergasies = SimmetoxiDrastiriotita.objects.filter(
-        id__in=drastiriotites, student=request.user.profile.student
-    )
+    ergasia = None
 
-    if(ergasia_id in ergasies.values_list('id', flat=True)):
-        ergasia = SimmetoxiDrastiriotita.objects.get(
-            id=ergasia_id, student=request.user.profile.student)
-        if(request.method == 'POST'):
-            form = FileUploadForm(request.POST, request.FILES)
-            if form.is_valid():
-                if(form.cleaned_data['file']):
-                    ergasia.file.delete(save=True)
-                    ergasia.file = form.cleaned_data['file']
-                    ergasia.save()
+    context = {}
 
-    context = {
-        'didaskalia': didaskalia,
-        'ergasies': ergasies,
-        'ergasia': ergasia,
-    }
+    if(user_profile.is_student()):
+        if(user_profile.student.parakolouthei(didaskalia_id) is False):
+            raise Http404()
+        ergasies = SimmetoxiDrastiriotita.objects.filter(
+            drastiriotita__in=drastiriotites, student=request.user.profile.student
+        )
+        if(ergasia_id in ergasies.values_list('id', flat=True)):
+            ergasia = SimmetoxiDrastiriotita.objects.get(
+                id=ergasia_id, student=request.user.profile.student)
+            if(request.method == 'POST'):
+                form = FileUploadForm(request.POST, request.FILES)
+                if form.is_valid():
+                    if(form.cleaned_data['file']):
+                        ergasia.file.delete(save=True)
+                        ergasia.file = form.cleaned_data['file']
+                        ergasia.delivered = True
+                        ergasia.save()
+    elif(user_profile.is_professor()):
+        if(user_profile.professor.didaskei(didaskalia_id) is False):
+            raise Http404()
+        ergasies = drastiriotites
+        if(ergasia_id in ergasies.values_list('id', flat=True)):
+            ergasia = Drastiriotita.objects.get(
+                id=ergasia_id)
+            registered = SimmetoxiDrastiriotita.objects.filter(
+                drastiriotita=ergasia)
+            context['registered'] = registered
+
+            if(request.method == 'POST'):
+                form = GradeUploadForm(request.POST)
+                if form.is_valid():
+                    if(form.cleaned_data['grade'] and form.cleaned_data['student_id']):
+                        ergasia_foititi = SimmetoxiDrastiriotita.objects.get(
+                            drastiriotita=ergasia, student=Student.objects.get(am=int(form.cleaned_data['student_id'])))
+                        ergasia_foititi.grade = form.cleaned_data['grade']
+                        ergasia_foititi.save()
+
+    context['didaskalia'] = didaskalia
+    context['ergasies'] = ergasies
+    context['ergasia'] = ergasia
+    context['didaskalia_id'] = didaskalia_id
 
     return render(request, 'ergasies.html', context=context)
+
+
+@login_required
+def new_ergasia(request, didaskalia_id):
+    user_profile = request.user.profile
+    if(user_profile.professor.didaskei(didaskalia_id) is False):
+        raise Http404()
+
+    didaskalia = Didaskalia.objects.get(id=didaskalia_id)
+    diloseis = Dilosi.objects.filter(didaskalia=didaskalia)
+
+    if request.method == 'GET':
+        form = NewErgasiaForm()
+    elif request.method == 'POST':
+        form = NewErgasiaForm(request.POST, request.FILES)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            sintelestis = form.cleaned_data['sintelestis']
+            due_date = form.cleaned_data['due_date']
+            tipos = form.cleaned_data['tipos']
+            perigrafi = form.cleaned_data['perigrafi']
+            if(form.cleaned_data['file']):
+                file = form.cleaned_data['file']
+            else:
+                file = None
+            new_drastiriotita = Drastiriotita.objects.create(
+                title=title, sintelestis=sintelestis, due_date=due_date, tipos=tipos, perigrafi=perigrafi, file=file, didaskalia=didaskalia)
+            for dilosi in diloseis:
+                new_simmetoxi = SimmetoxiDrastiriotita.objects.create(
+                    drastiriotita=new_drastiriotita, student=dilosi.student)
+            return HttpResponseRedirect(reverse('ergasies', kwargs={'didaskalia_id': didaskalia_id},))
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'new_ergasia.html', context=context)

@@ -1,5 +1,6 @@
 from django import forms
-from .models import Profile
+from .models import Drastiriotita
+from django.contrib.admin import widgets
 
 
 class ChangeAvatarForm(forms.Form):
@@ -33,3 +34,37 @@ class FileUploadForm(forms.Form):
     )
 
     fields = ['file']
+
+
+class GradeUploadForm(forms.Form):
+    grade = forms.FloatField(required=True)
+    student_id = forms.IntegerField(required=True)
+
+    fields = ['grade', 'student_id']
+
+
+class NewErgasiaForm(forms.Form):
+
+    DRASTIRIOTITES_CHOICES = ('ERGASIA', 'PROODOS',
+                              'ERGASTIRIO', 'EKSTETASTIKI')
+
+    sintelestis = forms.FloatField()
+    due_date = forms.DateField()
+    tipos = forms.CharField(max_length=45)
+    title = forms.CharField(max_length=45)
+    perigrafi = forms.CharField(max_length=400, widget=forms.Textarea)
+    file = forms.FileField(required=False)
+
+    fields = ['sintelestis', 'due_date',
+              'tipos', 'title', 'perigrafi', 'file']
+
+    def clean(self):
+        # Then call the clean() method of the super  class
+        cleaned_data = super(NewErgasiaForm, self).clean()
+        print(cleaned_data)
+        # ... do some cross-fields validation for the subclass
+        if not cleaned_data['tipos'] in self.DRASTIRIOTITES_CHOICES:
+            raise forms.ValidationError(
+                "Tipos must be one of ('ERGASIA', 'PROODOS', 'ERGASTIRIO', 'EKSTETASTIKI')")
+        # Finally, return the cleaned_data
+        return cleaned_data
