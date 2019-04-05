@@ -13,4 +13,5 @@ urlpatterns = [
          views.ergasies, name='ergasia'),
     path('new_ergasia/<int:didaskalia_id>',
          views.new_ergasia, name='new_ergasia'),
+    path('orologio/', views.orologio, name='orologio')
 ]

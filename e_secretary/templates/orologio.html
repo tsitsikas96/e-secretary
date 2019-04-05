@@ -1,0 +1,24 @@
+{% extends 'base_index.html' %}
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/news_feed-styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/events-styles.css'    %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+<!--  -->
+<div class="row" id="tmima">
+  <div class="col">
+    <h2>Τμήμα Ηλεκτρολόγων Μηχανικών και Τεχνολογίας Υπολογιστών</h2>
+  </div>
+</div>
+
+<!-- Events Feed -->
+<div class="row">
+
+</div>
+{% endblock content %}
+<!--  -->

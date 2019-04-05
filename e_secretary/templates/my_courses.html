@@ -10,152 +10,149 @@
 
 {% block content %}
 
-<div class="container-fluid">
-
-  <div class="row">
-    <div class="col-6">
-      <h4 class="text-center">Τα μαθήματά μου</h4>
-      <!-- News Feed -->
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <table class="table table-striped mt-4 my_courses">
-            <tbody>
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Μάθημα</th>
-                  <th scope="col">Έτος</th>
-                  <th scope="col">Εξάμηνο</th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              {% for didaskalia in didaskalies %}
+<div class="row">
+  <div class="col-6">
+    <h4 class="text-center">Τα μαθήματά μου</h4>
+    <!-- News Feed -->
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <table class="table table-striped mt-4 my_courses">
+          <tbody>
+            <thead>
               <tr>
-                <th scope="row">{{forloop.counter|add:didaskalies_page_counter}}</th>
-                <td>
-                  <div>
-                    {{didaskalia.get_name}}
-                  </div>
-                  <div>
-                    {% for professor in didaskalia.get_professors %}
-                    {{professor.name}},
-                    {% endfor %}
-                  </div>
-                </td>
-                <td> {{didaskalia.akad_etos}} </td>
-                <td> {{didaskalia.eksamino}} </td>
-                <td>
-                  <form action="" method="post">
-                    <a href="{% url 'course' didaskalia_id=didaskalia.id %}" class="btn">
-                      <i class="fas fa-arrow-circle-right"></i>
-                    </a>
-                  </form>
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">Μάθημα</th>
+                <th scope="col">Έτος</th>
+                <th scope="col">Εξάμηνο</th>
+                <th scope="col"></th>
               </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+            </thead>
+            {% for didaskalia in didaskalies %}
+            <tr>
+              <th scope="row">{{forloop.counter|add:didaskalies_page_counter}}</th>
+              <td>
+                <div>
+                  {{didaskalia.get_name}}
+                </div>
+                <div>
+                  {% for professor in didaskalia.get_professors %}
+                  {{professor.name}},
+                  {% endfor %}
+                </div>
+              </td>
+              <td> {{didaskalia.akad_etos}} </td>
+              <td> {{didaskalia.eksamino}} </td>
+              <td>
+                <form action="" method="post">
+                  <a href="{% url 'course' didaskalia_id=didaskalia.id %}" class="btn">
+                    <i class="fas fa-arrow-circle-right"></i>
+                  </a>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-        <div class="row">
-          <div class="col">
-            <div class="d-flex justify-content-center">
-              {% if didaskalies.has_other_pages %}
-              <ul class="pagination">
-                {% if didaskalies.has_previous %}
-                <li class="page-item"><a class="page-link"
-                    href="?didaskalies_page={{ didaskalies.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
-                {% endif %}
-                {% for i in didaskalies.paginator.page_range %}
-                {% if didaskalies.number == i %}
-                <li class="active page-item">
-                  <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
-                </li>
-                {% else %}
-                <li class="page-item">
-                  <a class="page-link" href="?didaskalies_page={{ i }}">{{ i }}</a>
-                </li>
-                {% endif %}
-                {% endfor %}
-                {% if didaskalies.has_next %}
-                <li class="page-item"><a class="page-link"
-                    href="?didaskalies_page={{ didaskalies.next_page_number }}">&raquo;</a>
-                </li>
-                {% else %}
-                <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
-                {% endif %}
-              </ul>
+      <div class="row">
+        <div class="col">
+          <div class="d-flex justify-content-center">
+            {% if didaskalies.has_other_pages %}
+            <ul class="pagination">
+              {% if didaskalies.has_previous %}
+              <li class="page-item"><a class="page-link"
+                  href="?didaskalies_page={{ didaskalies.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
               {% endif %}
-            </div>
+              {% for i in didaskalies.paginator.page_range %}
+              {% if didaskalies.number == i %}
+              <li class="active page-item">
+                <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?didaskalies_page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+              {% if didaskalies.has_next %}
+              <li class="page-item"><a class="page-link"
+                  href="?didaskalies_page={{ didaskalies.next_page_number }}">&raquo;</a>
+              </li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+              {% endif %}
+            </ul>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
-
-    <div class="col-6">
-      <h4 class="text-center">Ανακοινώσεις</h4>
-      <!-- News Feed -->
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <table class="table table-striped mt-4 my_courses">
-            <tbody>
-              {% for announcement in announcements %}
-              <tr class="announcement">
-                <th scope="row">{{forloop.counter|add:announcements_page_counter}}</th>
-                <td>
-                  <div class="announcement_content">
-                    {{announcement.content}}
-                  </div>
-                  <div class="mt-1 announcement_date">
-                    {{announcement.date}}
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <div class="d-flex justify-content-center">
-              {% if announcements.has_other_pages %}
-              <ul class="pagination">
-                {% if announcements.has_previous %}
-                <li class="page-item"><a class="page-link"
-                    href="?announcements_page={{ announcements.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
-                {% endif %}
-                {% for i in announcements.paginator.page_range %}
-                {% if announcements.number == i %}
-                <li class="active page-item">
-                  <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
-                </li>
-                {% else %}
-                <li class="page-item">
-                  <a class="page-link" href="?announcements_page={{ i }}">{{ i }}</a>
-                </li>
-                {% endif %}
-                {% endfor %}
-                {% if announcements.has_next %}
-                <li class="page-item"><a class="page-link"
-                    href="?announcements_page={{ announcements.next_page_number }}">&raquo;</a>
-                </li>
-                {% else %}
-                <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
-                {% endif %}
-              </ul>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="col-6">
+    <h4 class="text-center">Ανακοινώσεις</h4>
+    <!-- News Feed -->
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <table class="table table-striped mt-4 my_courses">
+          <tbody>
+            {% for announcement in announcements %}
+            <tr class="announcement">
+              <th scope="row">{{forloop.counter|add:announcements_page_counter}}</th>
+              <td>
+                <div class="announcement_content">
+                  {{announcement.content}}
+                </div>
+                <div class="mt-1 announcement_date">
+                  {{announcement.date}}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="d-flex justify-content-center">
+            {% if announcements.has_other_pages %}
+            <ul class="pagination">
+              {% if announcements.has_previous %}
+              <li class="page-item"><a class="page-link"
+                  href="?announcements_page={{ announcements.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+              {% endif %}
+              {% for i in announcements.paginator.page_range %}
+              {% if announcements.number == i %}
+              <li class="active page-item">
+                <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?announcements_page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+              {% if announcements.has_next %}
+              <li class="page-item"><a class="page-link"
+                  href="?announcements_page={{ announcements.next_page_number }}">&raquo;</a>
+              </li>
+              {% else %}
+              <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+              {% endif %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 {% endblock %}

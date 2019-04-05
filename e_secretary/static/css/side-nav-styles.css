@@ -1,7 +1,14 @@
 #leftSideBar {
     padding-left: 0;
     max-width: 340px;
-    min-height: 700px;
+    /* min-height: 700px; */
+}
+
+@media only screen and (min-width: 600px) {
+    #leftSideBar {
+        min-height: 700px;
+    }
+
 }
 
 .nav-side-menu {

@@ -242,3 +242,24 @@ def new_ergasia(request, didaskalia_id):
     }
 
     return render(request, 'new_ergasia.html', context=context)
+
+
+@login_required
+def orologio(request):
+
+    user_profile = request.user.profile
+
+    if(user_profile.is_student()):
+        diloseis = Dilosi.objects.filter(
+            student=user_profile.student)
+        didaskalies = [dilosi.didaskalia for dilosi in diloseis]
+    elif(user_profile.is_professor()):
+        didaskalies = user_profile.professor.didaskalia.all()
+
+    orologio = Orologio.objects.filter(didaskalia__in=didaskalies)
+
+    context = {
+        'orologio': orologio
+    }
+
+    return render(request, 'orologio.html', context=context)

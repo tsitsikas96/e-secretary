@@ -121,12 +121,17 @@
             {% endif %}
           </td>
           <td>
-            {{student.grade}}
-            <form method="post" action="">
+            <div id="submited_grade">
+              {{student.grade}}
+            </div>
+            <form method="post" action="" id="student_grade_form">
               {% csrf_token %}
               <input type="text" name="grade" id="grade">
               <input type="hidden" name="student_id" id="student_id" value="{{student.student.am}}">
+              <input type="hidden" name="didaskalia_id" id="didaskalia_id" value="{{didaskalia_id}}">
+              <input type="hidden" name="ergasia_id" id="ergasia_id" value="{{ergasia.id}}">
               <input type="submit" value="OK" id="submit_grade">
+              <div class='mt-3 mb-1' id="error_message"></div>
             </form>
           </td>
         </tr>

@@ -82,6 +82,9 @@ class Didaskalia(models.Model):
     def get_name(self):
         return self.course.name
 
+    def name(self):
+        return self.get_name()
+
 
 class Orologio(models.Model):
     MON = 'MON'
@@ -103,11 +106,14 @@ class Orologio(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
-    didaskalia_id = models.ForeignKey(
+    didaskalia = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
     day = models.CharField(max_length=3, choices=DAYS_CHOICES)
     start_time = models.TimeField()
     end_time = models.TimeField()
+
+    def __str__(self):
+        return f'{self.didaskalia.name} - {self.day} {self.start_time}-{self.end_time}'
 
 
 class Event(models.Model):
