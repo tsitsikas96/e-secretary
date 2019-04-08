@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, time, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.views.generic.list import ListView
@@ -10,6 +10,7 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect, Http404
 from e_secretary.forms import *
 from django.views import View
+import json
 
 from e_secretary.models import *
 
@@ -145,6 +146,8 @@ def course(request, didaskalia_id):
     }
     context['announcements'] = announcements
     context['announcements_page_counter'] = announcements_page_counter
+    context['didaskalia_id'] = didaskalia_id
+    context['user_profile'] = user_profile
 
     return render(request, 'course.html', context=context)
 
@@ -245,6 +248,47 @@ def new_ergasia(request, didaskalia_id):
 
 
 @login_required
+def new_announcement(request, didaskalia_id):
+
+    user_profile = request.user.profile
+
+    if(not user_profile.is_professor()):
+        raise Http404()
+
+    if(user_profile.professor.didaskei(didaskalia_id) is False):
+        raise Http404()
+
+    didaskalia = Didaskalia.objects.get(id=didaskalia_id)
+
+    if request.method == 'GET':
+        form = NewAnnouncementForm()
+    elif request.method == 'POST':
+        form = NewAnnouncementForm(request.POST, request.FILES)
+        if form.is_valid():
+            content = form.cleaned_data['content']
+
+            new_announcement = Announcement.objects.create(
+                content=content, didaskalia_id=didaskalia)
+            return HttpResponseRedirect(reverse('course', kwargs={'didaskalia_id': didaskalia_id},))
+
+    context = {
+        'form': form,
+        'didaskalia': didaskalia,
+        'didaskalia_id': didaskalia_id
+    }
+
+    return render(request, 'new_announcement.html', context=context)
+
+
+def next_weekday(weekday):
+    d = datetime.now()
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0:  # Target day already happened this week
+        days_ahead += 7
+    return d + timedelta(days_ahead)
+
+
+@login_required
 def orologio(request):
 
     user_profile = request.user.profile
@@ -256,7 +300,28 @@ def orologio(request):
     elif(user_profile.is_professor()):
         didaskalies = user_profile.professor.didaskalia.all()
 
-    orologio = Orologio.objects.filter(didaskalia__in=didaskalies)
+    programma = Orologio.objects.filter(didaskalia__in=didaskalies)
+
+    orologio = []
+
+    for mathima in programma:
+
+        start_datetime = next_weekday(mathima.DAYS_CHOICES_INT[mathima.day]).strftime(
+            '%d-%m-%Y') + ' ' + mathima.start_time.strftime('%H:%M:%S')
+
+        end_datetime = next_weekday(mathima.DAYS_CHOICES_INT[mathima.day]).strftime(
+            '%d-%m-%Y') + ' ' + (mathima.end_time).strftime('%H:%M:%S')
+
+        orologio.append({
+            "id": mathima.didaskalia.id,
+            "title": mathima.didaskalia.name(),
+            "start": start_datetime,
+            "end": end_datetime,
+            "backgroundColor": '#039BE5',
+            "textColor": '#FFF'
+        })
+
+    orologio = json.dumps(orologio,  ensure_ascii=False)
 
     context = {
         'orologio': orologio

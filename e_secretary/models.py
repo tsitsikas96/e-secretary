@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta, time
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -95,6 +95,16 @@ class Orologio(models.Model):
     SAT = 'SAT'
     SUN = 'SUN'
 
+    DAYS_CHOICES_INT = {
+        MON: 0,
+        TUE: 1,
+        WEN: 2,
+        THU: 3,
+        FRI: 4,
+        SAT: 5,
+        SUN: 6
+    }
+
     DAYS_CHOICES = (
         (MON, 'MONDAY'),
         (TUE, 'TUESDAY'),
@@ -129,7 +139,7 @@ class Event(models.Model):
 class Announcement(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
-        Didaskalia, on_delete=models.SET_NULL, null=True)
+        Didaskalia, on_delete=models.CASCADE)
     content = models.TextField(help_text='Announcement to make')
     date = models.DateField(default=datetime.now)
 

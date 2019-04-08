@@ -5,20 +5,46 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'css/news_feed-styles.css' %}">
 <link rel="stylesheet" href="{% static 'css/events-styles.css'    %}">
+<link rel="stylesheet" href="{% static 'css/easycal.css' %}">
 {% endblock %}
 <!--  -->
 
 {% block content %}
-<!--  -->
-<div class="row" id="tmima">
-  <div class="col">
-    <h2>Τμήμα Ηλεκτρολόγων Μηχανικών και Τεχνολογίας Υπολογιστών</h2>
-  </div>
-</div>
-
-<!-- Events Feed -->
+<!-- Calendar - Orologio -->
 <div class="row">
-
+  <div class="col-12">
+    <div class="text-center">
+      <h3>Ωρολόγιο Πρόγραμμα</h3>
+    </div>
+    <div id="calendar-wrapper">
+      <div class="mycal"></div>
+    </div>
+  </div>
 </div>
 {% endblock content %}
 <!--  -->
+
+{% block js_files %}
+{{block.super}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script src="{% static 'js/easycal.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    let date = new Date();
+
+    let events_json = '{{orologio}}'.replace(/&quot;/g, '"')
+    events_json = jQuery.parseJSON(events_json)
+
+    $('.mycal').easycal({
+
+      minTime: '09:00:00',
+      maxTime: '22:00:00',
+      slotDuration: 60,
+      startDate: date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear(),
+      events: events_json
+
+    });
+  });
+</script>
+{% endblock %}

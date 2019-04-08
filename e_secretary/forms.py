@@ -1,5 +1,5 @@
 from django import forms
-from .models import Drastiriotita
+from .models import Announcement
 from django.contrib.admin import widgets
 
 
@@ -68,3 +68,10 @@ class NewErgasiaForm(forms.Form):
                 "Tipos must be one of ('ERGASIA', 'PROODOS', 'ERGASTIRIO', 'EKSTETASTIKI')")
         # Finally, return the cleaned_data
         return cleaned_data
+
+
+class NewAnnouncementForm(forms.ModelForm):
+
+    class Meta:
+        model = Announcement
+        fields = ['content']
