@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect, Http404
 from e_secretary.forms import *
 from django.views import View
 import json
-
 from e_secretary.models import *
 
 
