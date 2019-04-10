@@ -283,8 +283,8 @@ def new_announcement(request, didaskalia_id):
 def next_weekday(weekday):
     d = datetime.now()
     days_ahead = weekday - d.weekday()
-    if days_ahead <= 0:  # Target day already happened this week
-        days_ahead += 7
+    # if days_ahead <= 0:  # Target day already happened this week
+    #     days_ahead += 7
     return d + timedelta(days_ahead)
 
 

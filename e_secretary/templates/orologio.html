@@ -32,6 +32,7 @@
 <script>
   $(document).ready(function () {
     let date = new Date();
+    let today = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
 
     let events_json = '{{orologio}}'.replace(/&quot;/g, '"')
     events_json = jQuery.parseJSON(events_json)
@@ -41,8 +42,20 @@
       minTime: '09:00:00',
       maxTime: '22:00:00',
       slotDuration: 60,
-      startDate: date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear(),
-      events: events_json
+      startDate: today,
+      events: events_json,
+
+      dayClick: function (el, startTime) {
+        console.log('Slot selected: ' + startTime);
+      },
+
+      eventClick: function (eventId) {
+        window.location.href = "{% url 'course' didaskalia_id=1234 %}".replace(/1234/, eventId.toString());
+      },
+
+      overlapColor: '#FF0',
+      overlapTextColor: '#000',
+      overlapTitle: 'Multiple'
 
     });
   });
