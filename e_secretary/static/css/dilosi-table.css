@@ -1,0 +1,7 @@
+#table-didask,#table-dilosi
+{
+    display: block;
+    height: 550px;
+    overflow-y: auto;
+    text-align: center;
+}
