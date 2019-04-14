@@ -40,9 +40,11 @@ def index(request):
 
 
 @login_required
-def profile(request):
+def profile(request, profileID=None):
 
-    profile_id = request.GET.get('profile_id')
+    profile_id = profileID
+
+    print(profile_id)
 
     if (profile_id is None):
         user = request.user

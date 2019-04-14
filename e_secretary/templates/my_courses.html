@@ -36,7 +36,7 @@
                 </div>
                 <div>
                   {% for professor in didaskalia.get_professors %}
-                  {{professor.name}},
+                  <a href="{% url 'profile_user' profileID=professor.get_profile_id %}">{{professor.name}}</a>,
                   {% endfor %}
                 </div>
               </td>

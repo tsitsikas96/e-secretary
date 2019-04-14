@@ -203,6 +203,9 @@ class Drastiriotita(models.Model):
         return SimmetoxiDrastiriotita.objects.filter(
             drastiriotita=self, delivered=True).count()
 
+    def get_tipos(self):
+        return f'{self.tipos}'
+
 
 class Professor(models.Model):
     PROFESSOR = 'PROF'
@@ -241,6 +244,10 @@ class Professor(models.Model):
     def name(self):
         prof = Profile.objects.get(professor=self.id)
         return prof.name()
+
+    def get_profile_id(self):
+        prof = Profile.objects.get(professor=self.id)
+        return prof.id
 
 
 class Student(models.Model):
@@ -292,6 +299,12 @@ class Student(models.Model):
         profile = Profile.objects.filter(student=self)
         if(profile):
             return profile[0].name()
+        return None
+
+    def get_profile_id(self):
+        profile = Profile.objects.get(student=self)
+        if(profile):
+            return profile.id
         return None
 
 

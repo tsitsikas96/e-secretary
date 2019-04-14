@@ -27,6 +27,26 @@
       {% include 'course_announcements.html' %}
     </div>
   </div>
+  <div class="row mt-5">
+    <div class="col-3">
+      <div>
+        <h4 class="text-center">Καθηγητές</h4>
+      </div>
+      <div>
+        <table class="table table-striped mt-4">
+          <tbody>
+            {% for professor in didaskalia.get_professors %}
+            <tr>
+              <td class="text-center">
+                <a href="{% url 'profile_user' profileID=professor.get_profile_id %}">{{professor.name}}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
