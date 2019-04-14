@@ -9,6 +9,7 @@
            <thead class="thead-dark">
              <tr>
                <th scope="col">Τίτλος</th>
+               <th scope="col">Τύπος</th>
                <th scope="col">Προθεσμία</th>
                <th scope="col">Έχει αποσταλεί;</th>
                <th scope="col">Βαθμός</th>
@@ -20,6 +21,9 @@
              <tr class="announcement">
                <td> <a
                    href="{% url 'ergasia' didaskalia_id=ergasia.drastiriotita.didaskalia.id ergasia_id=ergasia.id%}">{{ergasia.drastiriotita.title}}</a>
+               </td>
+               <td>
+                 {{ergasia.drastiriotita.get_tipos}}
                </td>
                <td>
                  <div>
@@ -56,6 +60,10 @@
          <div class="row">
            <div class="col-3 ergasia_stoixeia_first_col">Τίτλος</div>
            <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.drastiriotita.title}}</div>
+         </div>
+         <div class="row">
+           <div class="col-3 ergasia_stoixeia_first_col">Τύπος</div>
+           <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.drastiriotita.get_tipos}}</div>
          </div>
          <div class="row">
            <div class="col-3 ergasia_stoixeia_first_col">Περιγραφή</div>

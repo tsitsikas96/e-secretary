@@ -21,6 +21,7 @@
           <thead class="thead-dark">
             <tr>
               <th scope="col">Τίτλος</th>
+              <th scope="col">Τύπος</th>
               <th scope="col">Προθεσμία</th>
               <th scope="col">Έχει αποσταλεί από</th>
             </tr>
@@ -31,6 +32,9 @@
             <tr class="announcement">
               <td> <a
                   href="{% url 'ergasia' didaskalia_id=ergasia.didaskalia.id ergasia_id=ergasia.id%}">{{ergasia.title}}</a>
+              </td>
+              <td>
+                {{ergasia.get_tipos}}
               </td>
               <td>
                 <div>
@@ -66,6 +70,10 @@
             <div class="row">
               <div class="col-3 ergasia_stoixeia_first_col">Τίτλος</div>
               <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.title}}</div>
+            </div>
+            <div class="row">
+              <div class="col-3 ergasia_stoixeia_first_col">Τύπος</div>
+              <div class="col-9 ergasia_stoixeia_sec_col">{{ergasia.get_tipos}}</div>
             </div>
             <div class="row">
               <div class="col-3 ergasia_stoixeia_first_col">Περιγραφή</div>
@@ -111,7 +119,7 @@
             {{student.student.am}}
           </td>
           <td>
-            {{student.student.name}}
+            <a href="{% url 'profile_user' profileID=student.student.get_profile_id %}">{{student.student.name}}</a>
           </td>
           <td>
             {% if student.file %}
@@ -121,12 +129,17 @@
             {% endif %}
           </td>
           <td>
-            {{student.grade}}
-            <form method="post" action="">
+            <div id="submited_grade">
+              {{student.grade}}
+            </div>
+            <form method="post" action="" id="student_grade_form">
               {% csrf_token %}
               <input type="text" name="grade" id="grade">
               <input type="hidden" name="student_id" id="student_id" value="{{student.student.am}}">
+              <input type="hidden" name="didaskalia_id" id="didaskalia_id" value="{{didaskalia_id}}">
+              <input type="hidden" name="ergasia_id" id="ergasia_id" value="{{ergasia.id}}">
               <input type="submit" value="OK" id="submit_grade">
+              <div class='mt-3 mb-1' id="error_message"></div>
             </form>
           </td>
         </tr>

@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta, time
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -82,6 +82,9 @@ class Didaskalia(models.Model):
     def get_name(self):
         return self.course.name
 
+    def name(self):
+        return self.get_name()
+
 
 class Orologio(models.Model):
     MON = 'MON'
@@ -91,6 +94,16 @@ class Orologio(models.Model):
     FRI = 'FRI'
     SAT = 'SAT'
     SUN = 'SUN'
+
+    DAYS_CHOICES_INT = {
+        MON: 0,
+        TUE: 1,
+        WEN: 2,
+        THU: 3,
+        FRI: 4,
+        SAT: 5,
+        SUN: 6
+    }
 
     DAYS_CHOICES = (
         (MON, 'MONDAY'),
@@ -103,11 +116,14 @@ class Orologio(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
-    didaskalia_id = models.ForeignKey(
+    didaskalia = models.ForeignKey(
         Didaskalia, on_delete=models.SET_NULL, null=True)
     day = models.CharField(max_length=3, choices=DAYS_CHOICES)
     start_time = models.TimeField()
     end_time = models.TimeField()
+
+    def __str__(self):
+        return f'{self.didaskalia.name} - {self.day} {self.start_time}-{self.end_time}'
 
 
 class Event(models.Model):
@@ -123,7 +139,7 @@ class Event(models.Model):
 class Announcement(models.Model):
     id = models.AutoField(primary_key=True)
     didaskalia_id = models.ForeignKey(
-        Didaskalia, on_delete=models.SET_NULL, null=True)
+        Didaskalia, on_delete=models.CASCADE)
     content = models.TextField(help_text='Announcement to make')
     date = models.DateField(default=datetime.now)
 
@@ -187,6 +203,9 @@ class Drastiriotita(models.Model):
         return SimmetoxiDrastiriotita.objects.filter(
             drastiriotita=self, delivered=True).count()
 
+    def get_tipos(self):
+        return f'{self.tipos}'
+
 
 class Professor(models.Model):
     PROFESSOR = 'PROF'
@@ -225,6 +244,10 @@ class Professor(models.Model):
     def name(self):
         prof = Profile.objects.get(professor=self.id)
         return prof.name()
+
+    def get_profile_id(self):
+        prof = Profile.objects.get(professor=self.id)
+        return prof.id
 
 
 class Student(models.Model):
@@ -276,6 +299,12 @@ class Student(models.Model):
         profile = Profile.objects.filter(student=self)
         if(profile):
             return profile[0].name()
+        return None
+
+    def get_profile_id(self):
+        profile = Profile.objects.get(student=self)
+        if(profile):
+            return profile.id
         return None
 
 

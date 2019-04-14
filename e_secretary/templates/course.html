@@ -19,11 +19,33 @@
   </div>
 
   <div class="row mt-5">
-    <div class="col-6">
+    <div class="col-lg-6 col-xs-12">
       <h4 class="text-center mb-3">Περιγραφή</h4>
       {{didaskalia.perigrafi|safe}}
     </div>
-    {% include 'course_announcements.html' %}
+    <div class="col-lg-6 col-xs-12">
+      {% include 'course_announcements.html' %}
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-3">
+      <div>
+        <h4 class="text-center">Καθηγητές</h4>
+      </div>
+      <div>
+        <table class="table table-striped mt-4">
+          <tbody>
+            {% for professor in didaskalia.get_professors %}
+            <tr>
+              <td class="text-center">
+                <a href="{% url 'profile_user' profileID=professor.get_profile_id %}">{{professor.name}}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 

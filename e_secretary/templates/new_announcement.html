@@ -1,0 +1,36 @@
+{% extends 'base_index.html' %}
+<!--  -->
+{% load static %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/new_announcement.css' %}">
+{% endblock %}
+<!--  -->
+
+{% block content %}
+<div class="container-fuild">
+  <div class="row">
+    <div class="col-12">
+      <form action="" method="post" enctype="multipart/form-data" id="new_announcement_form">
+        {% csrf_token %}
+
+        <div class="ml-4">
+          <h3>{{didaskalia.name}}</h3>
+        </div>
+
+        <div class="ml-5">
+          <h6>Νέα ανακοίνωση</h6>
+        </div>
+
+        <div>
+          <span>{{ form.content }}</span>
+        </div>
+
+        <input type="submit" value="Submit">
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}
+<!--  -->

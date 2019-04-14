@@ -1,8 +1,17 @@
-<div class="col-6">
-  <h4 class="text-center">Ανακοινώσεις</h4>
-  <!-- News Feed -->
-  <div class="container-fluid">
-    <div class="row-fluid">
+<!-- News Feed -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-8">
+      <h4 class="text-right">Ανακοινώσεις</h4>
+    </div>
+    {% if user_profile.is_professor %}
+    <div class="col-4">
+      <a href="{% url 'new_announcement' didaskalia_id=didaskalia_id %}" class="btn btn-primary">Νέα Ανακοίνωση</a>
+    </div>
+    {% endif %}
+  </div>
+  <div class="row">
+    <div class="col">
       <table class="table table-striped mt-4 my_courses">
         <tbody>
           {% for announcement in announcements %}
@@ -21,39 +30,39 @@
         </tbody>
       </table>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col">
-        <div class="d-flex justify-content-center">
-          {% if announcements.has_other_pages %}
-          <ul class="pagination">
-            {% if announcements.has_previous %}
-            <li class="page-item"><a class="page-link"
-                href="?announcements_page={{ announcements.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-            <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
-            {% endif %}
-            {% for i in announcements.paginator.page_range %}
-            {% if announcements.number == i %}
-            <li class="active page-item">
-              <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
-            </li>
-            {% else %}
-            <li class="page-item">
-              <a class="page-link" href="?announcements_page={{ i }}">{{ i }}</a>
-            </li>
-            {% endif %}
-            {% endfor %}
-            {% if announcements.has_next %}
-            <li class="page-item"><a class="page-link"
-                href="?announcements_page={{ announcements.next_page_number }}">&raquo;</a>
-            </li>
-            {% else %}
-            <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
-            {% endif %}
-          </ul>
+  <div class="row">
+    <div class="col">
+      <div class="d-flex justify-content-center">
+        {% if announcements.has_other_pages %}
+        <ul class="pagination">
+          {% if announcements.has_previous %}
+          <li class="page-item"><a class="page-link"
+              href="?announcements_page={{ announcements.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+          <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
           {% endif %}
-        </div>
+          {% for i in announcements.paginator.page_range %}
+          {% if announcements.number == i %}
+          <li class="active page-item">
+            <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+          </li>
+          {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?announcements_page={{ i }}">{{ i }}</a>
+          </li>
+          {% endif %}
+          {% endfor %}
+          {% if announcements.has_next %}
+          <li class="page-item"><a class="page-link"
+              href="?announcements_page={{ announcements.next_page_number }}">&raquo;</a>
+          </li>
+          {% else %}
+          <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+          {% endif %}
+        </ul>
+        {% endif %}
       </div>
     </div>
   </div>

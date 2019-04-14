@@ -14,17 +14,19 @@
     <div class="col-md-4">
       <div class="profile-img" id="avatar_box">
         <img src="{{profile_id.image_url}}" alt="" />
+        {% if request.user.profile.id == profile_id.id %}
         <div class="file btn" id="change_avatar_button">
           <a href="{% url 'change-avatar' %}" class="text-white">
             Change Photo
           </a>
         </div>
+        {% endif %}
       </div>
     </div>
     <div class="col-md-6">
       <div class="profile-head">
         <h5>
-          {{profile_id.user.first_name}} {{profile_id.user.last_name}}
+          <a href="{% url 'profile_user' profileID=profile_id.id %}">{{profile_id.name}}</a>
         </h5>
         <h6>
           {{profile_id.idiotita}}

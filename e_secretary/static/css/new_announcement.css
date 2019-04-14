@@ -1,0 +1,13 @@
+#new_announcement_form {
+    background-color: #F5F5F5;
+    border: 3px solid gray;
+    padding: 1em;
+}
+
+#new_announcement_form>div {
+    margin: 1em;
+}
+
+#new_announcement_form>div :last-child {
+    margin: 0em 0em 0em 1em;
+}

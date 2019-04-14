@@ -28,3 +28,10 @@
 </div>
 
 {% endblock %}
+
+{% if request.user.profile.is_professor %}
+{% block js_files %}
+{{block.super}}
+<script src="{% static 'js/ergasies_professor.js' %}"></script>
+{% endblock js_files %}
+{% endif %}
