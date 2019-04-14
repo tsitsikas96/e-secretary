@@ -12,6 +12,9 @@ from e_secretary.forms import *
 from django.views import View
 import json
 from e_secretary.models import *
+from e_secretary.tables import *
+from django_tables2 import RequestConfig
+from django.http import HttpResponse
 
 
 def index(request):
@@ -247,7 +250,6 @@ def new_ergasia(request, didaskalia_id):
 
     return render(request, 'new_ergasia.html', context=context)
 
-
 @login_required
 def new_announcement(request, didaskalia_id):
 
@@ -329,3 +331,35 @@ def orologio(request):
     }
 
     return render(request, 'orologio.html', context=context)
+  
+@login_required  
+@csrf_exempt
+def diloseis(request):
+
+    didaskalies_data = Didaskalia.objects.raw('select e_secretary_didaskalia.id,e_secretary_course.name, e_secretary_course.tomeas, e_secretary_course.ects,e_secretary_course.programma_spoudwn,e_secretary_course.ipoxrewtiko from e_secretary_course join e_secretary_didaskalia on e_secretary_course.id = e_secretary_didaskalia.course_id where e_secretary_didaskalia.akad_etos = YEAR(CURDATE());')
+
+    am = request.user.profile.get_am()
+
+    dilosi_data = Didaskalia.objects.raw('select e_secretary_didaskalia.id, e_secretary_course.name, e_secretary_course.tomeas, e_secretary_course.ects from (e_secretary_dilosi join e_secretary_didaskalia on e_secretary_dilosi.didaskalia_id = e_secretary_didaskalia.id) join e_secretary_course on e_secretary_didaskalia.course_id = e_secretary_course.id where e_secretary_dilosi.student_id = {};'.format(am))
+
+    dilosi_table = DilosiTable(dilosi_data)
+    didaskalies_table = DidaskaliesTable(didaskalies_data)
+
+    print(am)
+
+    if request.is_ajax():
+        Dilosi.objects.filter(student_id = am).delete()
+        request_data = request.POST.getlist("dilosi[]")
+        for x in request_data:
+            student = Student.objects.get(am = am)
+            didaskalia = Didaskalia.objects.get(id = x)
+            q = Dilosi(student=student,didaskalia=didaskalia)
+            q.save()
+        return HttpResponse("OK")
+
+    context = {
+        'didaskalies_table' : didaskalies_table,
+        'dilosi_table': dilosi_table,
+    }
+
+    return render(request, 'diloseis.html', context=context)

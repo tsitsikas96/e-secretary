@@ -411,6 +411,9 @@ class Profile(models.Model):
             return self.professor.get_title_display()
         elif (self.is_grammateia()):
             return u'Γραμματεία'
+            
+    def get_am(self):
+        return self.student.am
 
     def is_student(self):
         if (self.student is not None):
