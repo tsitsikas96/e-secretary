@@ -1,0 +1,29 @@
+{% extends 'base_index.html' %}
+{% load render_table from django_tables2 %}
+
+{% load staticfiles %}
+{% block staticfiles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/dilosi-table.css' %}">
+<script src="{% static 'js/move-didaskalia.js' %}"></script>
+<script src="{% static 'js/sort-didask-table.js' %}"></script>
+<script src="{% static 'js/save-reset-dilosi.js' %}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-auto col-xs-12">
+    {% render_table didaskalies_table %}
+  </div>
+  <div class="col-md-auto col-xs-12">
+    {% render_table dilosi_table %}
+  </div>
+</div>
+
+<div class="col-auto">
+  <input type="submit" class="btn btn-lg btn-primary" value="Αποθήκευση Δήλωσης" id="submit-button">
+  <input type="submit" class="btn btn-lg btn-primary" value="Καθαρισμός Δήλωσης" id="clear-button">
+</div>
+{% endblock %}
+
