@@ -50,3 +50,9 @@
 </div>
 
 {% endblock %}
+
+
+{% block js_files %}
+{{block.super}}
+<script src="{% static 'js/course_navbar.js' %}"></script>
+{% endblock js_files %}

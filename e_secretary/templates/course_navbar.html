@@ -1,24 +1,17 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
+<nav class="navbar navbar-expand-sm navbar-light bg-light" id="course_navbar">
   <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
     aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="collapsibleNavId">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'course' didaskalia_id=didaskalia.id %}">{{didaskalia.get_name}}</a>
       </li>
-      <li class="nav-item dropdown active">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">{{didaskalia.get_name}}</a>
-        <div class="dropdown-menu" aria-labelledby="dropdownId">
-          <a class="dropdown-item" href="{% url 'course' didaskalia_id=didaskalia.id %}">Αρχική</a>
-          <a class="dropdown-item" href="{% url 'ergasies' didaskalia_id=didaskalia.id %}">Εργασίες</a>
-        </div>
-      </li>
-      <li class="nav-item ml-3">
-        <a class="nav-link" href="{% url 'my_courses' %}">Τα μαθήματά μου <span class="sr-only"></span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'ergasies' didaskalia_id=didaskalia.id %}">Εργασίες</a>
       </li>
     </ul>
   </div>

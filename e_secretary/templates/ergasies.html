@@ -29,9 +29,11 @@
 
 {% endblock %}
 
-{% if request.user.profile.is_professor %}
+
 {% block js_files %}
 {{block.super}}
+{% if request.user.profile.is_professor %}
 <script src="{% static 'js/ergasies_professor.js' %}"></script>
-{% endblock js_files %}
 {% endif %}
+<script src="{% static 'js/course_navbar.js' %}"></script>
+{% endblock js_files %}
