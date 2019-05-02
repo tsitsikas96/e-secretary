@@ -4,10 +4,10 @@ from datetime import datetime, timezone, date, timedelta, time
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 # Create your models here.
-# YOLO
 
 
 class Course(models.Model):
@@ -226,7 +226,7 @@ class Professor(models.Model):
     title = models.CharField(
         max_length=5, choices=PROFESSOR_TITLE, default=PROFESSOR)
     tomeas = models.CharField(max_length=100)
-    didaskalia = models.ManyToManyField(Didaskalia, null=True, blank=True)
+    didaskalia = models.ManyToManyField(Didaskalia, blank=True)
 
     # Metadata
     class Meta:
@@ -311,7 +311,7 @@ class Student(models.Model):
 class Dilosi(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     didaskalia = models.ForeignKey(Didaskalia, on_delete=models.CASCADE)
-    telikos_vathmos = models.FloatField(max_length=4, null=True, blank=True)
+    telikos_vathmos = models.FloatField(max_length=4, null=True, blank=True, validators=   [MinValueValidator(0.0), MaxValueValidator(10.0)])
 
     def __str__(self):
         return f'{self.student.name()} - {self.didaskalia.get_name()}'
@@ -362,7 +362,7 @@ class SimmetoxiDrastiriotita(models.Model):
         Student, on_delete=models.SET_NULL, null=True)
     drastiriotita = models.ForeignKey(
         Drastiriotita, on_delete=models.SET_NULL, null=True)
-    grade = models.FloatField(null=True, blank=True)
+    grade = models.FloatField(null=True, blank=True, validators=   [MinValueValidator(0.0), MaxValueValidator(10.0)])
     file = models.FileField(upload_to='files', null=True, blank=True)
     delivered = models.BooleanField(default=False)
 
