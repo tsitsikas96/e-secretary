@@ -5,3 +5,8 @@
     overflow-y: auto;
     text-align: center;
 }
+
+#table-didask th,#table-dilosi th{
+    background-color: #3C4556;
+    color: white;
+}
