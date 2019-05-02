@@ -1,0 +1,9 @@
+{% load render_table from django_tables2 %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/grades-table.css' %}">
+
+<div id="grades-table">
+    <br>
+    {% render_table vathmologies_table_prof %}
+</div>
