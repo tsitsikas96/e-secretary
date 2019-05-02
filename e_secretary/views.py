@@ -360,3 +360,59 @@ def diloseis(request):
     }
 
     return render(request, 'diloseis.html', context=context)
+
+@login_required  
+def vathmologies(request):
+    user_profile = request.user.profile
+    if(user_profile.is_professor()):
+        didaskalies_prof= Didaskalia.objects.raw('select e_secretary_professor_didaskalia.didaskalia_id as id,e_secretary_course.name,e_secretary_didaskalia.akad_etos from (e_secretary_professor_didaskalia join e_secretary_didaskalia on e_secretary_professor_didaskalia.didaskalia_id = e_secretary_didaskalia.id) join e_secretary_course on e_secretary_course.id = e_secretary_didaskalia.course_id;')
+
+        didaskalies_ids = {}
+        for x in didaskalies_prof:
+            tag = x.name + ' ' + str(x.akad_etos)
+            didaskalies_ids[tag] = x.id
+
+        vathmologies_data = {}
+        
+        template = 'vathmologies.html'
+        if request.is_ajax():
+            if request.POST.get('text'):
+                request_data = request.POST.get('text')
+                vathmologies_data = SimmetoxiDrastiriotita.objects.raw(
+                    'SELECT id, ergasies, proodos, lab, exams,  ROUND(ROUND( ROUND(COALESCE(ergasies_with_weight, 0) + COALESCE(proodos_with_weight, 0) + COALESCE(lab_with_weight, 0) + COALESCE(exams_with_weight, 0),1) * 2,0) / 2,1) AS telikos FROM (SELECT         e_secretary_simmetoxidrastiriotita.student_id as id, AVG(CASE WHEN e_secretary_drastiriotita.tipos = "ERGASIA" THEN e_secretary_simmetoxidrastiriotita.grade END) AS ergasies, AVG(CASE WHEN e_secretary_drastiriotita.tipos = "PROODOS" THEN e_secretary_simmetoxidrastiriotita.grade END ) AS proodos, AVG(CASE WHEN e_secretary_drastiriotita.tipos = "ERGASTIRIO" THEN e_secretary_simmetoxidrastiriotita.grade END) AS lab, AVG(CASE WHEN e_secretary_drastiriotita.tipos = "EKSTETASTIKI" THEN e_secretary_simmetoxidrastiriotita.grade END) AS exams, AVG(CASE WHEN e_secretary_drastiriotita.tipos = "ERGASIA" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS ergasies_with_weight,AVG(CASE WHEN e_secretary_drastiriotita.tipos = "PROODOS" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS proodos_with_weight,AVG(CASE WHEN e_secretary_drastiriotita.tipos = "ERGASTIRIO" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS lab_with_weight,AVG(CASE WHEN e_secretary_drastiriotita.tipos = "EKSTETASTIKI" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS exams_with_weight FROM     `e_secretary_simmetoxidrastiriotita` JOIN e_secretary_drastiriotita ON e_secretary_simmetoxidrastiriotita.drastiriotita_id = e_secretary_drastiriotita.id WHERE e_secretary_drastiriotita.didaskalia_id = {} GROUP BY     e_secretary_simmetoxidrastiriotita.student_id) AS t'.format(didaskalies_ids[request_data])
+                )
+
+                template = 'vathmologies_prof_table.html'
+                vathmologies_table = VathmologiesProfTable(vathmologies_data)
+                context = {
+                    'vathmologies_table_prof': vathmologies_table,
+                }
+
+                return render(request,template,context)
+            elif request.POST.get('save'):
+                for x in didaskalies_ids:
+                    vathmologies_data = SimmetoxiDrastiriotita.objects.raw(
+                    'SELECT id,  ROUND(ROUND( ROUND(COALESCE(ergasies_with_weight, 0) + COALESCE(proodos_with_weight, 0) + COALESCE(lab_with_weight, 0) + COALESCE(exams_with_weight, 0),1) * 2,0) / 2,1) AS telikos FROM (SELECT         e_secretary_simmetoxidrastiriotita.student_id as id, AVG(CASE WHEN e_secretary_drastiriotita.tipos = "ERGASIA" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS ergasies_with_weight,AVG(CASE WHEN e_secretary_drastiriotita.tipos = "PROODOS" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS proodos_with_weight,AVG(CASE WHEN e_secretary_drastiriotita.tipos = "ERGASTIRIO" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS lab_with_weight,AVG(CASE WHEN e_secretary_drastiriotita.tipos = "EKSTETASTIKI" THEN e_secretary_simmetoxidrastiriotita.grade * e_secretary_drastiriotita.sintelestis END) AS exams_with_weight FROM     `e_secretary_simmetoxidrastiriotita` JOIN e_secretary_drastiriotita ON e_secretary_simmetoxidrastiriotita.drastiriotita_id = e_secretary_drastiriotita.id WHERE e_secretary_drastiriotita.didaskalia_id = {} GROUP BY     e_secretary_simmetoxidrastiriotita.student_id) AS t'.format(didaskalies_ids[x])
+                    )
+                    for y in vathmologies_data:
+                        Dilosi.objects.filter(student_id=y.id,didaskalia_id = didaskalies_ids[x]).update(telikos_vathmos=y.telikos)
+
+        vathmologies_table = VathmologiesProfTable(vathmologies_data)
+        context = {
+            'didaskalies_prof' : didaskalies_prof,
+            'vathmologies_table_prof': vathmologies_table,
+        }
+        return render(request,template,context)
+    elif(user_profile.is_student()):
+        am = request.user.profile.get_am()
+
+        vathmologies_data = Dilosi.objects.raw("SELECT e_secretary_dilosi.didaskalia_id as id, e_secretary_course.name,e_secretary_didaskalia.akad_etos,e_secretary_dilosi.telikos_vathmos FROM (e_secretary_dilosi join e_secretary_didaskalia on e_secretary_dilosi.didaskalia_id = e_secretary_didaskalia.id) join e_secretary_course on e_secretary_didaskalia.course_id = e_secretary_course.id ORDER BY e_secretary_didaskalia.akad_etos DESC, e_secretary_course.name")
+        
+        vathmologies_table = VathmologiesStudTable(vathmologies_data)
+        template = "vathmologies.html"
+        context = {
+            'vathmologies_table_stud': vathmologies_table,
+        }
+        return render(request,template,context)
+
+    return render(request,'vathmologies.html',{})
