@@ -22,8 +22,16 @@
 </div>
 
 <div class="col-auto">
+  {% csrf_token %}
   <input type="submit" class="btn btn-lg btn-primary" value="Αποθήκευση Δήλωσης" id="submit-button">
+  {% csrf_token %}
   <input type="submit" class="btn btn-lg btn-primary" value="Καθαρισμός Δήλωσης" id="clear-button">
+  <style>
+      #submit-button,#clear-button {
+          background-color: #3C4556;
+          color: white;
+      }
+  </style>
 </div>
 {% endblock %}
 
