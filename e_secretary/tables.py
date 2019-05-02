@@ -11,7 +11,7 @@ class DidaskaliesTable(tables.Table):
     ipoxrewtiko = tables.BooleanColumn(verbose_name="Υποχρεωτικό",orderable=False)
 
     class Meta:
-        attrs = {'class': 'table table-hover table-bordered','id':'table-didask'}
+        attrs = {'class': 'table table-hover table-bordered table-striped','id':'table-didask'}
         template_name= 'django_tables2/bootstrap-responsive.html'
 
 class DilosiTable(tables.Table):
@@ -22,5 +22,5 @@ class DilosiTable(tables.Table):
 
     class Meta:
         fields = ['id','name','tomeas','ects']
-        attrs = {'class': 'table table-hover table-bordered','id':'table-dilosi'}
+        attrs = {'class': 'table table-hover table-bordered table-striped','id':'table-dilosi'}
         template_name= 'django_tables2/bootstrap-responsive.html'
