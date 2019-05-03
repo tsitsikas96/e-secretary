@@ -8,6 +8,7 @@ urlpatterns = [
     path('profile/<int:profileID>/', views.profile, name='profile_user'),
     path('change_avatar/', views.change_avatar, name='change-avatar'),
     path('diloseis/', views.diloseis, name='diloseis'),
+    path('vathmologies/', views.vathmologies, name='vathmologies'),
     path('my_courses/', views.my_courses, name='my_courses'),
     path('course/<int:didaskalia_id>/', views.course, name='course'),
     path('ergasies/<int:didaskalia_id>/', views.ergasies, name='ergasies'),

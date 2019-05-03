@@ -1,0 +1,47 @@
+{% extends 'base_index.html' %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+
+{% if user.profile.is_student %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/grades-table.css' %}">
+<div>
+    {% render_table vathmologies_table_stud %}
+</div>
+
+{% endif %}
+
+{% if user.profile.is_professor %}
+
+{% load staticfiles %}
+{% block staticprof %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/grade-selector-prof.css' %}">
+<script src="{% static 'js/prof-grade-dropdown.js' %}"></script>
+<script src="{% static 'js/prof-grade-button.js' %}"></script>
+{% endblock %}
+
+<div class="row col-auto">
+    {% csrf_token %}
+    <select id="course-filter" class="form-control">
+        {% for x in didaskalies_prof %}
+            <option>{{x.name}} {{x.akad_etos}}</option> 
+        {% endfor %}
+    </select>
+    <hr>
+    {% csrf_token %}
+    <input type="submit" class="btn btn-md btn-primary" value="Αποθήκευση Βαθμών" id="submit-grades">
+    <style>
+        #submit-grades {
+            background-color: #3C4556;
+            color: white;
+        }
+    </style>
+</div>
+
+{% include 'vathmologies_prof_table.html' %}
+
+{% endif %}
+{% endblock %}
+

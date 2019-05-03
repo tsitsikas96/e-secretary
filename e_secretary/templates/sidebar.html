@@ -30,8 +30,8 @@
       </a>
       {% endif %}
 
-      {% if user.profile.is_student %}
-      <a href="#">
+      {% if user.profile.is_student or user.profile.is_professor %}
+      <a href="{% url 'vathmologies' %}">
         <li class="menu-option" id="grades-option">
           <i class="fa fa-user-graduate fa-lg"></i> Βαθμολογίες
         </li>
