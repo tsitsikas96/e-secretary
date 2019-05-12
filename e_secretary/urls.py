@@ -18,5 +18,6 @@ urlpatterns = [
          views.new_ergasia, name='new_ergasia'),
     path('orologio/', views.orologio, name='orologio'),
     path('course/<int:didaskalia_id>/new_announcement/',
-         views.new_announcement, name='new_announcement')
+         views.new_announcement, name='new_announcement'),
+    path('certificates/', views.certificates, name='certificates')
 ]
