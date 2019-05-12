@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
 
 
 # Create your models here.
@@ -318,11 +319,19 @@ class Dilosi(models.Model):
 
 
 class Certificate(models.Model):
+
+    ENERGOS = 'ENERGOS'
+    ARMY = 'ARMY'
+    GRADES = 'GRADES'
+
+    CERT_CHOICES = ((ENERGOS,'Ενεργού Φοιτητή'),(ARMY,'Στρατολογική Χρήσης'),(GRADES,'Αναλυτική Βαθμολογία'))
+
     cert_id = models.AutoField(primary_key=True)
-    cert_type = models.CharField(max_length=50)
-    date_requested = models.DateField(auto_now_add=True)
-    available = models.BooleanField()
-    received = models.BooleanField()
+    cert_type = models.CharField(max_length=10,choices=CERT_CHOICES)
+    copies = models.IntegerField(null=False,validators=   [MinValueValidator(1), MaxValueValidator(5)],default=1)
+    date_requested = models.DateField(default=timezone.now)
+    available = models.BooleanField(default=False)
+    received = models.BooleanField(default=False)
     student_am = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     class Meta:

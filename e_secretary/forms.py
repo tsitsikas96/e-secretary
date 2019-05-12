@@ -75,3 +75,12 @@ class NewAnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
         fields = ['content']
+
+class CertificateForm(forms.Form):
+    CHOICES = [('ENERGOS','Ενεργού Φοιτητή'),
+    ('ARMY','Στρατολογικής Χρήσης'),('GRADES','Αναλυτική Βαθμολογία')]
+
+    tipos = forms.ChoiceField(label = 'Τύπος Πιστοποιητικού', choices=CHOICES, widget = forms.RadioSelect, required = True)
+    copies = forms.IntegerField(label='Αριθμός Αντιτύπων',max_value=5,min_value=1,initial = 1)
+
+    fields = ['tipos','copies']

@@ -416,3 +416,26 @@ def vathmologies(request):
         return render(request,template,context)
 
     return render(request,'vathmologies.html',{})
+
+@login_required  
+def certificates(request):
+    user_profile = request.user.profile
+    form = CertificateForm()
+    am = user_profile.get_am()
+    student = Student.objects.get(am=am)
+    table_data = Certificate.objects.filter(student_am_id = am)
+    table = CertificatesTable(table_data)
+
+    if request.method == 'POST':
+        submit_form = CertificateForm(request.POST)
+        if submit_form.is_valid():
+            
+            tipos = submit_form.cleaned_data['tipos']
+            copies = submit_form.cleaned_data['copies']
+            student_am = student
+            Certificate.objects.create(cert_type=tipos,copies=copies,student_am = student_am)
+            
+        return HttpResponseRedirect('/certificates/')
+    
+    context = {'form' : form, 'table':table}
+    return render(request,"certificates.html",context)
