@@ -2,14 +2,23 @@
 
 <div class="nav-side-menu">
   <div class="brand">University of Patras</div>
+  {% if user.profile.is_student %}
   <div class="foititis">
     <div id="onoma_foititi">
-      Όνομα Φοιτητή, 1020623
+      {{request.user.profile.name}}, {{request.user.profile.get_am}}
     </div>
     <div id="mesos_oros">
-      Μέσος Όρος : xx.xx
+      Μέσος Όρος : {{request.user.profile.get_average}}
     </div>
   </div>
+  {% endif %}
+  {% if user.profile.is_professor %}
+  <div class="professor">
+    <div id="onoma_foititi">
+        {{request.user.profile.name}}
+    </div>
+  </div>
+  {% endif %}
   <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 
   <div class="menu-list">
@@ -54,14 +63,6 @@
       <a href="{% url 'certificates' %}">
         <li class="menu-option" id="pistopoitika-option">
           <i class="fa fa-certificate fa-lg"></i> Πιστοποιητικά
-        </li>
-      </a>
-      {% endif %}
-
-      {% if user.profile.is_student %}
-      <a href="#">
-        <li class="menu-option" id="aitiseis-option">
-          <i class="fa fa-stream fa-lg"></i> Αιτήσεις
         </li>
       </a>
       {% endif %}
