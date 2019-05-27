@@ -74,4 +74,7 @@ Port number for development is `8000`
 
 Create user groups for `Professors` and `Students` and assign each one with the respective permissions. Then create users (Professors and Students) and add them to their corresponding group.
 
-A proper register system is yet to be developed.
+## TODO
+
+- A proper register system is yet to be developed.
+- Fix grade in sidebar
