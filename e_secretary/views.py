@@ -99,25 +99,26 @@ def my_courses(request):
     context = {}
 
     if request.method == 'GET':
+        context = {}
         didaskalies_list = request.user.profile.get_my_courses()
-        didaskalies_paginator = Paginator(didaskalies_list, didaskalies_max)
-        didaskalies_page = request.GET.get('didaskalies_page') or 1
-        didaskalies = didaskalies_paginator.get_page(didaskalies_page)
-        didaskalies_page_counter = didaskalies_max*(int(didaskalies_page)-1)
+        if(didaskalies_list):
+            didaskalies_paginator = Paginator(didaskalies_list, didaskalies_max)
+            didaskalies_page = request.GET.get('didaskalies_page') or 1
+            didaskalies = didaskalies_paginator.get_page(didaskalies_page)
+            didaskalies_page_counter = didaskalies_max*(int(didaskalies_page)-1)
+            announcements_list = Announcement.objects.filter(
+                didaskalia_id__in=didaskalies_list)
+            announcements_paginator = Paginator(
+                announcements_list, announcements_max)
+            announcements_page = request.GET.get('announcements_page') or 1
+            announcements = announcements_paginator.get_page(announcements_page)
+            announcements_page_counter = announcements_max * \
+                (int(announcements_page)-1)
 
-        announcements_list = Announcement.objects.filter(
-            didaskalia_id__in=didaskalies_list)
-        announcements_paginator = Paginator(
-            announcements_list, announcements_max)
-        announcements_page = request.GET.get('announcements_page') or 1
-        announcements = announcements_paginator.get_page(announcements_page)
-        announcements_page_counter = announcements_max * \
-            (int(announcements_page)-1)
-
-        context['didaskalies'] = didaskalies
-        context['didaskalies_page_counter'] = didaskalies_page_counter
-        context['announcements'] = announcements
-        context['announcements_page_counter'] = announcements_page_counter
+            context['didaskalies'] = didaskalies
+            context['didaskalies_page_counter'] = didaskalies_page_counter
+            context['announcements'] = announcements
+            context['announcements_page_counter'] = announcements_page_counter
 
     return render(request, 'my_courses.html', context=context)
 
@@ -296,39 +297,43 @@ def orologio(request):
 
     user_profile = request.user.profile
 
+    didaskalies = None
+
     if(user_profile.is_student()):
-        diloseis = Dilosi.objects.filter(
-            student=user_profile.student)
+        diloseis = Dilosi.objects.filter(student=user_profile.student)
         didaskalies = [dilosi.didaskalia for dilosi in diloseis]
     elif(user_profile.is_professor()):
         didaskalies = user_profile.professor.didaskalia.all()
 
-    programma = Orologio.objects.filter(didaskalia__in=didaskalies)
+    if(didaskalies):
+        programma = Orologio.objects.filter(didaskalia__in=didaskalies)
 
-    orologio = []
+        orologio = []
 
-    for mathima in programma:
+        for mathima in programma:
 
-        start_datetime = next_weekday(mathima.DAYS_CHOICES_INT[mathima.day]).strftime(
-            '%d-%m-%Y') + ' ' + mathima.start_time.strftime('%H:%M:%S')
+            start_datetime = next_weekday(mathima.DAYS_CHOICES_INT[mathima.day]).strftime(
+                '%d-%m-%Y') + ' ' + mathima.start_time.strftime('%H:%M:%S')
 
-        end_datetime = next_weekday(mathima.DAYS_CHOICES_INT[mathima.day]).strftime(
-            '%d-%m-%Y') + ' ' + (mathima.end_time).strftime('%H:%M:%S')
+            end_datetime = next_weekday(mathima.DAYS_CHOICES_INT[mathima.day]).strftime(
+                '%d-%m-%Y') + ' ' + (mathima.end_time).strftime('%H:%M:%S')
 
-        orologio.append({
-            "id": mathima.didaskalia.id,
-            "title": mathima.didaskalia.name(),
-            "start": start_datetime,
-            "end": end_datetime,
-            "backgroundColor": '#039BE5',
-            "textColor": '#FFF'
-        })
+            orologio.append({
+                "id": mathima.didaskalia.id,
+                "title": mathima.didaskalia.name(),
+                "start": start_datetime,
+                "end": end_datetime,
+                "backgroundColor": '#039BE5',
+                "textColor": '#FFF'
+            })
 
-    orologio = json.dumps(orologio,  ensure_ascii=False)
+        orologio = json.dumps(orologio,  ensure_ascii=False)
 
-    context = {
-        'orologio': orologio
-    }
+        context = {
+            'orologio': orologio
+        }
+    else:
+        context = {}
 
     return render(request, 'orologio.html', context=context)
   
