@@ -9,6 +9,7 @@ Clone this git repo and setup python virtual environment (Python 3.7 recommended
 git clone https://github.com/tsikup/e-secretary
 cd e-secretary
 python -m venv web_project
+source ./web_project/bin/activate
 ```
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all dependencies.
