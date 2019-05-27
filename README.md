@@ -71,3 +71,5 @@ In order to access the admin panel, which is also used as the secretary web pane
 `http://localhost:port/admin`
 
 Port number for development is `8000`
+
+Create user groups for `Professors` and `Students` and assign each one with the respective permissions. Then create users (Professors and Students) and add them to their corresponding group.
