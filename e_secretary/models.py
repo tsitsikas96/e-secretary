@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
+from django.db.models import Avg
 
 
 # Create your models here.
@@ -308,6 +309,10 @@ class Student(models.Model):
             return profile.id
         return None
 
+    def get_average(self):
+        average = Dilosi.objects.filter(student_id = self.am).aggregate(Avg('telikos_vathmos'))
+        mesos_oros = average['telikos_vathmos__avg']
+        return f'{mesos_oros}'
 
 class Dilosi(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -423,6 +428,9 @@ class Profile(models.Model):
             
     def get_am(self):
         return self.student.am
+
+    def get_average(self):
+        return f'{self.student.get_average()}'
 
     def is_student(self):
         if (self.student is not None):

@@ -406,7 +406,7 @@ def vathmologies(request):
     elif(user_profile.is_student()):
         am = request.user.profile.get_am()
 
-        vathmologies_data = Dilosi.objects.raw("SELECT e_secretary_dilosi.didaskalia_id as id, e_secretary_course.name,e_secretary_didaskalia.akad_etos,e_secretary_dilosi.telikos_vathmos FROM (e_secretary_dilosi join e_secretary_didaskalia on e_secretary_dilosi.didaskalia_id = e_secretary_didaskalia.id) join e_secretary_course on e_secretary_didaskalia.course_id = e_secretary_course.id ORDER BY e_secretary_didaskalia.akad_etos DESC, e_secretary_course.name")
+        vathmologies_data = Dilosi.objects.raw('SELECT e_secretary_dilosi.didaskalia_id as id, e_secretary_course.name,e_secretary_didaskalia.akad_etos,e_secretary_dilosi.telikos_vathmos FROM (e_secretary_dilosi join e_secretary_didaskalia on e_secretary_dilosi.didaskalia_id = e_secretary_didaskalia.id) join e_secretary_course on e_secretary_didaskalia.course_id = e_secretary_course.id where e_secretary_dilosi.student_id = {} ORDER BY e_secretary_didaskalia.akad_etos DESC, e_secretary_course.name;'.format(am))
         
         vathmologies_table = VathmologiesStudTable(vathmologies_data)
         template = "vathmologies.html"

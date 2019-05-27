@@ -33,7 +33,7 @@
     font-size: 1.2em;
 }
 
-.nav-side-menu .foititis {
+.nav-side-menu .foititis , .nav-side-menu .professor{
     background-color: rgb(49, 57, 71);
     line-height: 3em;
     border: 1px solid #23282e;
