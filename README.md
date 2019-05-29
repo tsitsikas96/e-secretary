@@ -28,6 +28,7 @@ Setup a docker container for mariadb on port `50000` with db_user `admin` with p
 
 ```bash
 docker run --name mariadb \
+-p 50000:3306 \
 -e MYSQL_ROOT_PASSWORD=root_pass \
 -e MYSQL_USER=admin \
 -e MYSQL_PASSWORD=qwe123 \
@@ -39,6 +40,7 @@ The previously created DB is empty. If you have been provided with the DB data u
 
 ```bash
 docker run --name mariadb \
+-p 50000:3306 \
 -e MYSQL_ROOT_PASSWORD=root_pass \
 -e MYSQL_USER=admin \
 -e MYSQL_PASSWORD=qwe123 \
