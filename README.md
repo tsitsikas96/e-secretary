@@ -79,5 +79,5 @@ Create user groups for `Professors` and `Students` and assign each one with the 
 
 ## TODO
 
-- A proper register system is yet to be developed.
-- Fix grade in sidebar
+- [ ] A proper register system is yet to be developed.
+- [ ] Fix grade in sidebar
