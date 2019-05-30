@@ -47,8 +47,6 @@ def profile(request, profileID=None):
 
     profile_id = profileID
 
-    print(profile_id)
-
     if (profile_id is None):
         user = request.user
     else:
