@@ -312,6 +312,8 @@ class Student(models.Model):
     def get_average(self):
         average = Dilosi.objects.filter(student_id = self.am).aggregate(Avg('telikos_vathmos'))
         mesos_oros = average['telikos_vathmos__avg']
+        if(mesos_oros < 5):
+            return "N/A"
         return f'{mesos_oros}'
 
 class Dilosi(models.Model):
