@@ -310,9 +310,9 @@ class Student(models.Model):
         return None
 
     def get_average(self):
-        average = Dilosi.objects.filter(student_id = self.am).aggregate(Avg('telikos_vathmos'))
+        average = Dilosi.objects.filter(student_id = self.am,telikos_vathmos__gte=5).aggregate(Avg('telikos_vathmos'))
         mesos_oros = average['telikos_vathmos__avg']
-        if(mesos_oros < 5):
+        if(mesos_oros == None):
             return "N/A"
         return f'{mesos_oros}'
 
