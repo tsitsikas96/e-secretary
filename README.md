@@ -69,7 +69,7 @@ The web app will run in development. In order to go to production please refer t
 
 ## Access admin panel
 
-In order to access the admin panel, which is also used as the secretary web panel, go to 
+In order to access the admin panel, which is also used as the secretary web panel, go to
 
 `http://localhost:port/admin`
 
@@ -80,4 +80,4 @@ Create user groups for `Professors` and `Students` and assign each one with the 
 ## TODO
 
 - [ ] A proper register system is yet to be developed.
-- [ ] Fix grade in sidebar
+- [x] Fix grade in sidebar
