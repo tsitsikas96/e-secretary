@@ -1,6 +1,8 @@
 # e-secretary
 E-Secretary is a proposed solution for a university's secretary website, developed as a semester project in the Web Programming Course at ECE Dept. University of Patras
 
+Developed by Nikos Tsiknakis & Ilias Tsitsikas
+
 ## Installation
 
 Clone this git repo and setup python virtual environment (Python 3.7 recommended).
